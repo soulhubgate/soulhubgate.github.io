@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soul-Hub | Personality Analysis</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8142333751075278"
+        crossorigin="anonymous"></script>
+
+    <meta name="description"
+        content="Analyze your personality patterns with Soul-Hub. Measure alignment with styles like Borderline, Histrionic, Compulsive, and more. Bilingual (English/Arabic).">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        /* Arabic Font Override */
+        :lang(ar) {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-option {
+            transition: all 0.2s ease;
+        }
+
+        .btn-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-option:active {
+            transform: translateY(0);
+        }
+
+        .nav-link {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #818cf8;
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #475569 #0f172a;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Blob Animation */
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+
+    <div id="app-container"
+        class="w-full max-w-5xl glass-panel rounded-2xl flex flex-col relative overflow-hidden h-[90vh]">
+
+        <div
+            class="absolute top-0 left-0 w-32 h-32 bg-red-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob pointer-events-none">
+        </div>
+        <div
+            class="absolute top-0 right-0 w-32 h-32 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000 pointer-events-none">
+        </div>
+
+        <nav class="p-6 border-b border-slate-700/50 flex flex-wrap justify-between items-center z-20 bg-slate-900/40">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+                <span class="font-bold text-lg tracking-tight text-white">Soul-Hub</span>
+            </div>
+
+            <div class="hidden md:flex gap-6 text-sm font-medium text-slate-300 items-center">
+                <span onclick="navigateTo('home')" class="nav-link" id="nav-home" data-i18n="nav_home">Home</span>
+                <a href="blog.html" class="nav-link text-indigo-400 font-bold hover:text-indigo-300"
+                    data-i18n="nav_library">Library</a>
+                <span onclick="navigateTo('about')" class="nav-link" id="nav-about" data-i18n="nav_about">About
+                    Me</span>
+                <span onclick="navigateTo('contact')" class="nav-link" id="nav-contact"
+                    data-i18n="nav_contact">Contact</span>
+                <span onclick="navigateTo('disclaimer')" class="nav-link" id="nav-disclaimer"
+                    data-i18n="nav_disclaimer">Disclaimer</span>
+                <span onclick="navigateTo('privacy')" class="nav-link" id="nav-privacy"
+                    data-i18n="nav_privacy">Privacy</span>
+
+                <button onclick="toggleLanguage()"
+                    class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-full text-xs text-white border border-slate-600 transition-colors flex items-center gap-1">
+                    <i class="fas fa-globe"></i> <span id="lang-text">عربي</span>
+                </button>
+            </div>
+
+            <button class="md:hidden text-slate-300 hover:text-white"
+                onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </nav>
+
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-slate-800 border-b border-slate-700 p-4 absolute top-[80px] left-0 w-full z-30 flex flex-col gap-4 shadow-xl">
+            <span onclick="navigateTo('home'); toggleMobileMenu()"
+                class="text-slate-300 hover:text-white py-2 border-b border-slate-700/50"
+                data-i18n="nav_home">Home</span>
+            <a href="blog.html"
+                class="text-indigo-400 font-bold hover:text-indigo-300 py-2 border-b border-slate-700/50"
+                data-i18n="nav_library">Psychology Library</a>
+            <span onclick="navigateTo('about'); toggleMobileMenu()"
+                class="text-slate-300 hover:text-white py-2 border-b border-slate-700/50" data-i18n="nav_about">About
+                Me</span>
+            <span onclick="navigateTo('contact'); toggleMobileMenu()"
+                class="text-slate-300 hover:text-white py-2 border-b border-slate-700/50"
+                data-i18n="nav_contact">Contact</span>
+            <span onclick="navigateTo('disclaimer'); toggleMobileMenu()"
+                class="text-slate-300 hover:text-white py-2 border-b border-slate-700/50"
+                data-i18n="nav_disclaimer">Disclaimer</span>
+            <span onclick="navigateTo('privacy'); toggleMobileMenu()"
+                class="text-slate-300 hover:text-white py-2 border-b border-slate-700/50"
+                data-i18n="nav_privacy">Privacy</span>
+
+            <button onclick="toggleLanguage(); toggleMobileMenu()"
+                class="text-left text-indigo-300 py-2 font-bold flex items-center gap-2">
+                <i class="fas fa-globe"></i> <span id="lang-text-mobile">Switch to Arabic</span>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 relative">
+
+            <div id="page-home" class="fade-in">
+                <div class="text-center mt-8">
+                    <div class="mb-6 inline-block p-4 rounded-full bg-indigo-500/20 text-indigo-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300"
+                        data-i18n="home_title">
+                        Personality Test
+                    </h1>
+                    <p class="text-lg text-slate-300 mb-10 max-w-lg mx-auto leading-relaxed" data-i18n="home_desc">
+                        A 100-question assessment measuring alignment with various personality styles.
+                    </p>
+
+                    <button onclick="startQuiz()"
+                        class="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition-all transform hover:scale-105 mb-4"
+                        data-i18n="btn_start">
+                        Begin Assessment
+                    </button>
+                    <p class="text-xs text-slate-500 uppercase tracking-widest" data-i18n="time_est">Takes approx 10-15
+                        minutes</p>
+
+                    <div id="resume-container" class="hidden mt-4">
+                        <button onclick="resumeQuiz()"
+                            class="px-6 py-2 border border-slate-600 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors"
+                            data-i18n="btn_resume">
+                            Continue where I left off
+                        </button>
+                    </div>
+
+                    <div class="mt-8 pt-8 border-t border-slate-700/50">
+                        <p class="text-slate-400 text-sm mb-4" data-i18n="home_lib_text">Want to learn more about
+                            personality disorders?</p>
+                        <a href="blog.html"
+                            class="inline-flex items-center text-indigo-400 hover:text-indigo-300 font-semibold group transition-colors">
+                            <span data-i18n="home_lib_link">Visit the Psychology Library</span>
+                            <i
+                                class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform rtl:rotate-180"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-about" class="hidden fade-in">
+                <div class="bg-slate-800/30 rounded-xl p-6 md:p-8 border border-slate-700/50">
+                    <div class="flex flex-col md:flex-row items-start gap-8">
+                        <div class="shrink-0 mx-auto md:mx-0">
+                            <img src="ahmed.jpg" alt="Ahmed"
+                                class="w-32 h-32 rounded-full border-4 border-indigo-500/30 object-cover shadow-lg"
+                                onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Ahmed&background=6366f1&color=fff&size=128'">
+                        </div>
+                        <div class="w-full">
+                            <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-2"
+                                data-i18n="about_title">
+                                About Me
+                            </h2>
+                            <span
+                                class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded-full border border-indigo-500/20 align-middle"
+                                data-i18n="about_role">
+                                Programmer and part-time med-student
+                            </span>
+                            <div class="h-1 w-20 bg-indigo-500 rounded my-4"></div>
+
+                            <p class="text-slate-300 text-base leading-relaxed mb-4" data-i18n="about_p1">
+                                Hi, I’m <span class="text-indigo-400 font-semibold">Galileo:)</span>, a programmer and a
+                                part-time medstudent.
+                            </p>
+                            <p class="text-slate-300 text-base leading-relaxed mb-6" data-i18n="about_p2">
+                                I’m also interested in AI development, and psychology. I've created this website to make
+                                it easy for people explore their personalities, emotions, and mental patterns in a
+                                simple, accessible way.
+                            </p>
+                            <p class="text-slate-300" data-i18n="about_follow">If interested, Follow me on social media!
+                            </p>
+
+                            <div class="mt-8 flex gap-4">
+                                <button onclick="navigateTo('contact')"
+                                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm font-semibold transition-colors"
+                                    data-i18n="btn_contact">
+                                    Get in Touch
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-contact" class="hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6" data-i18n="contact_title">Contact & Info</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <a href="https://www.instagram.com/aahmeddgalal?igsh=MWowbGMzYWwwemFmYQ%3D%3D&utm_source=qr"
+                        target="_blank"
+                        class="block p-6 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-pink-500/50 hover:bg-slate-800 transition-all group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-pink-600/20 text-pink-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-200">Instagram</h3>
+                                <p class="text-xs text-slate-400">@aahmeddgalal</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="https://www.facebook.com/share/1ALjHnkErL/?mibextid=wwXIfr" target="_blank"
+                        class="block p-6 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-blue-500/50 hover:bg-slate-800 transition-all group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-blue-600/20 text-blue-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fab fa-facebook-f"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-200">Facebook</h3>
+                                <p class="text-xs text-slate-400">Connect on Facebook</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="mailto:aahmeddgalal@gmail.com"
+                        class="block p-6 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-indigo-500/50 hover:bg-slate-800 transition-all group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-200">Email</h3>
+                                <p class="text-xs text-slate-400">aahmeddgalal@gmail.com</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="https://linktr.ee/aahmeddgalal" target="_blank"
+                        class="block p-6 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-green-500/50 hover:bg-slate-800 transition-all group">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 rounded-full bg-green-600/20 text-green-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                <i class="fas fa-link"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-200">Linktree</h3>
+                                <p class="text-xs text-slate-400">All Links</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div id="page-disclaimer" class="hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6" data-i18n="nav_disclaimer">Disclaimer</h2>
+                <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-6 mb-6">
+                    <div class="flex items-start gap-4">
+                        <i class="fas fa-exclamation-triangle text-red-400 text-2xl mt-1"></i>
+                        <div>
+                            <h3 class="text-lg font-bold text-red-200 mb-2" data-i18n="disc_title">Not a Medical
+                                Diagnosis</h3>
+                            <p class="text-red-100/80 text-sm leading-relaxed" data-i18n="disc_text">
+                                The tests and content on this website are for <strong>educational, entertainment, and
+                                    self-awareness purposes only</strong>. They are not a substitute for a professional
+                                psychological evaluation, medical diagnosis, or treatment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-slate-300 space-y-4 text-sm leading-relaxed">
+                    <p>
+                        While these assessments are based on psychological theories and established traits, an online
+                        quiz cannot account for the complexity of individual mental health. High scores in specific
+                        categories (e.g., Narcissism, Depressive) do not constitute a clinical disorder.
+                    </p>
+                    <p>
+                        If you are experiencing distress, mental health challenges, or are concerned about your
+                        well-being, please consult a qualified mental health professional or doctor.
+                    </p>
+                </div>
+            </div>
+
+            <div id="page-privacy" class="hidden fade-in">
+                <h2 class="text-2xl font-bold text-white mb-6" data-i18n="nav_privacy">Privacy Policy</h2>
+                <div class="space-y-6 text-slate-300 leading-relaxed">
+                    <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700">
+                        <h3 class="text-indigo-300 font-bold mb-2" data-i18n="priv_1_t">1. No Data Storage</h3>
+                        <p class="text-sm" data-i18n="priv_1_d">
+                            PersonaFlow is a client-side application. This means that <strong>all processing happens
+                                directly in your web browser</strong>. We do not have a backend server, database, or
+                            cloud storage. Your answers, scores, and results are never sent to us or stored on any
+                            server.
+                        </p>
+                    </div>
+
+                    <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700">
+                        <h3 class="text-indigo-300 font-bold mb-2">2. Anonymity</h3>
+                        <p class="text-sm">
+                            Since we do not collect data, your participation is completely anonymous. Once you close or
+                            refresh this page, your results are lost permanently unless you choose to save them
+                            manually.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-quiz" class="hidden fade-in relative">
+                <button id="btn-back" onclick="goBack()"
+                    class="hidden text-slate-400 hover:text-white mb-4 text-sm flex items-center gap-2 transition-colors">
+                    <i class="fas fa-arrow-left rtl:rotate-180"></i> <span data-i18n="btn_back">Previous Question</span>
+                </button>
+
+                <div class="flex justify-between text-xs text-slate-400 mb-2 uppercase tracking-wide">
+                    <span data-i18n="progress">Progress</span>
+                    <span id="question-tracker">1 / 100</span>
+                </div>
+                <div class="w-full bg-slate-700 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="progress-bar"
+                        class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                        style="width: 0%"></div>
+                </div>
+
+                <div class="mb-8 min-h-[120px]">
+                    <h2 id="question-category" class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2">
+                        Category</h2>
+                    <h3 id="question-text" class="text-2xl md:text-3xl font-bold text-white leading-tight">Loading...
+                    </h3>
+                </div>
+
+                <div id="options-container" class="space-y-3">
+                </div>
+            </div>
+
+            <div id="page-loading" class="hidden text-center py-20 fade-in">
+                <div
+                    class="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500 mb-4">
+                </div>
+                <h2 class="text-2xl font-bold" data-i18n="analyzing">Analyzing Profile...</h2>
+            </div>
+
+            <div id="page-result" class="hidden fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h2 class="text-2xl font-bold mb-2" data-i18n="result_title">Psychological Matrix</h2>
+
+                        <div class="relative w-full h-[350px] mb-4 bg-slate-800/30 rounded-xl p-2">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+
+                        <div class="flex justify-end mb-6">
+                            <button onclick="downloadChart()"
+                                class="text-sm text-slate-400 hover:text-white flex items-center gap-2 transition-colors">
+                                <i class="fas fa-download"></i> <span data-i18n="btn_download">Save Chart</span>
+                            </button>
+                        </div>
+
+                        <div
+                            class="flex justify-center items-center gap-4 mb-6 p-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                            <span class="text-sm text-slate-400 font-semibold" data-i18n="share_text">Share
+                                Result:</span>
+                            <button onclick="shareResult('fb')"
+                                class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:scale-110 transition-transform"><i
+                                    class="fab fa-facebook-f"></i></button>
+                            <button onclick="shareResult('tw')"
+                                class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center hover:scale-110 transition-transform"><i
+                                    class="fab fa-twitter"></i></button>
+                            <button onclick="shareResult('wa')"
+                                class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center hover:scale-110 transition-transform"><i
+                                    class="fab fa-whatsapp"></i></button>
+                        </div>
+
+                        <div class="bg-indigo-900/20 border border-indigo-500/30 p-4 rounded-xl">
+                            <h3 class="text-indigo-300 font-bold mb-1" data-i18n="primary_pattern">Primary Pattern</h3>
+                            <p id="dominant-trait-desc" class="text-slate-200 text-sm leading-relaxed"></p>
+                            <a href="blog.html" class="block mt-3 text-xs text-indigo-400 hover:text-white underline"
+                                data-i18n="read_more_lib">Read more in Library</a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-2xl font-bold mb-2" data-i18n="stats_title">Detailed Statistics</h2>
+                        <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                            <div id="stats-grid" class="grid grid-cols-1 gap-y-3"></div>
+                        </div>
+                        <div class="mt-8">
+                            <button onclick="resetQuiz()"
+                                class="w-full py-4 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-colors"
+                                data-i18n="btn_retake">Retake Assessment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- TRANSLATION DATA ---
+        const translations = {
+            en: {
+                nav_home: "Home", nav_library: "Library", nav_about: "About Me", nav_contact: "Contact", nav_disclaimer: "Disclaimer", nav_privacy: "Privacy",
+                home_title: "Personality Test", home_desc: "A 100-question assessment measuring alignment with various personality styles.",
+                btn_start: "Begin Assessment", time_est: "Takes approx 10-15 minutes", btn_resume: "Continue where I left off",
+                home_lib_text: "Want to learn more about personality disorders?", home_lib_link: "Visit the Psychology Library",
+
+                about_title: "About Me", about_role: "Programmer and part-time med-student",
+                about_p1: "Hi, I’m <span class='text-indigo-400 font-semibold'>Galileo:)</span>, a programmer and a part-time medstudent.",
+                about_p2: "I’m also interested in AI development, and psychology. I've created this website to make it easy for people explore their personalities, emotions, and mental patterns in a simple, accessible way.",
+                about_follow: "If interested, Follow me on social media!",
+
+                btn_contact: "Get in Touch", contact_title: "Contact & Info",
+                btn_back: "Previous Question", progress: "Progress",
+                analyzing: "Analyzing Profile...", result_title: "Psychological Matrix",
+                btn_download: "Save Chart", share_text: "Share:",
+                primary_pattern: "Primary Pattern", read_more_lib: "Read more in Library",
+                stats_title: "Detailed Statistics", btn_retake: "Retake Assessment",
+                option_1: "Strongly Disagree", option_2: "Disagree", option_3: "Neutral", option_4: "Agree", option_5: "Strongly Agree",
+                disc_title: "Not a Medical Diagnosis", disc_text: "The tests and content on this website are for educational, entertainment, and self-awareness purposes only.",
+                priv_1_t: "1. No Data Storage", priv_1_d: "PersonaFlow is a client-side application. We do not store your answers."
+            },
+            ar: {
+                nav_home: "الرئيسية", nav_library: "المكتبة", nav_about: "عني", nav_contact: "تواصل معي", nav_disclaimer: "إخلاء مسؤولية", nav_privacy: "الخصوصية",
+                home_title: "اختبار تحليل الشخصية", home_desc: "اختبار شامل مكون من 100 سؤال لقياس أنماط الشخصية المختلفة بدقة.",
+                btn_start: "ابدأ الاختبار", time_est: "يستغرق حوالي 10-15 دقيقة", btn_resume: "استكمال الاختبار السابق",
+                home_lib_text: "هل تريد معرفة المزيد عن الاضطرابات النفسية؟", home_lib_link: "تصفح المكتبة النفسية",
+
+                about_title: "نبذة عني", about_role: "مبرمج وطالب طب",
+                about_p1: "أهلاً، أنا <span class='text-indigo-400 font-semibold'>Galileo:)</span>، مبرمج وطالب طب.",
+                about_p2: "أنا مهتم أيضاً بتطوير الذكاء الاصطناعي وعلم النفس. صممت هذا الموقع لمساعدة الناس على استكشاف شخصياتهم وعواطفهم وأنماطهم العقلية بطريقة بسيطة ومتاحة.",
+                about_follow: "إذا كنت مهتماً، تابعني على وسائل التواصل الاجتماعي!",
+
+                btn_contact: "تواصل معي", contact_title: "معلومات التواصل",
+                btn_back: "السؤال السابق", progress: "التقدم",
+                analyzing: "جاري تحليل الإجابات...", result_title: "مصفوفة الشخصية",
+                btn_download: "حفظ النتيجة كصورة", share_text: "شارك النتيجة:",
+                primary_pattern: "النمط السائد", read_more_lib: "اقرأ المزيد في المكتبة",
+                stats_title: "الإحصائيات التفصيلية", btn_retake: "إعادة الاختبار",
+                option_1: "لا أوافق بشدة", option_2: "لا أوافق", option_3: "محايد", option_4: "أوافق", option_5: "أوافق بشدة",
+                disc_title: "ليس تشخيصاً طبياً", disc_text: "الاختبارات والمحتوى في هذا الموقع للأغراض التعليمية والترفيهية فقط.",
+                priv_1_t: "1. لا تخزين للبيانات", priv_1_d: "هذا التطبيق يعمل بالكامل على متصفحك. نحن لا نقوم بتخزين إجاباتك."
+            }
+        };
+
+        const categoriesTrans = {
+            "Narcissism": { en: "Narcissism", ar: "النرجسية" },
+            "Borderline": { en: "Borderline", ar: "الشخصية الحدية" },
+            "Depressive": { en: "Depressive", ar: "الشخصية الاكتئابية" },
+            "Anxiety": { en: "Anxiety", ar: "القلق" },
+            "Compulsive": { en: "Compulsive", ar: "الشخصية الوسواسية" },
+            "Avoidant": { en: "Avoidant", ar: "الشخصية التجنبية" },
+            "Paranoid": { en: "Paranoid", ar: "الشخصية الارتيابية" },
+            "Histrionic": { en: "Histrionic", ar: "الشخصية الهستيرية" },
+            "Schizoid": { en: "Schizoid", ar: "الشخصية شبه الفصامية" },
+            "Aggressive": { en: "Aggressive", ar: "الشخصية العدوانية" }
+        };
+
+        // --- FULL QUESTION DATA (BILINGUAL) ---
+        const questions = [
+            // Narcissism
+            { category: "Narcissism", text: { en: "I believe I am more capable than most people.", ar: "أعتقد أنني أكثر كفاءة من معظم الناس." } },
+            { category: "Narcissism", text: { en: "I expect others to respect my superior status.", ar: "أتوقع من الآخرين احترام مكانتي المتفوقة." } },
+            { category: "Narcissism", text: { en: "I get annoyed when I don't get what I want.", ar: "أنزعج بشدة عندما لا أحصل على ما أريد." } },
+            { category: "Narcissism", text: { en: "People often envy me.", ar: "غالباً ما يحسدني الناس." } },
+            { category: "Narcissism", text: { en: "I require a lot of admiration.", ar: "أحتاج إلى الكثير من الإعجاب والثناء." } },
+            { category: "Narcissism", text: { en: "I can be manipulative to achieve my goals.", ar: "يمكنني التلاعب بالآخرين لتحقيق أهدافي." } },
+            { category: "Narcissism", text: { en: "I lack empathy for those who are weak.", ar: "أفتقر إلى التعاطف مع الضعفاء." } },
+            { category: "Narcissism", text: { en: "I am destined for greatness.", ar: "أنا مقدر للعظمة." } },
+            { category: "Narcissism", text: { en: "I often fantasize about unlimited success.", ar: "غالباً ما أتخيل تحقيق نجاح غير محدود." } },
+            { category: "Narcissism", text: { en: "I am very concerned with my public image.", ar: "أنا مهتم جداً بصورتي العامة." } },
+            // Borderline
+            { category: "Borderline", text: { en: "My mood changes very rapidly.", ar: "يتغير مزاجي بسرعة كبيرة." } },
+            { category: "Borderline", text: { en: "I am terrified of being abandoned.", ar: "أشعر بالرعب من فكرة أن يتم هجري." } },
+            { category: "Borderline", text: { en: "I often feel empty inside.", ar: "غالباً ما أشعر بالفراغ من الداخل." } },
+            { category: "Borderline", text: { en: "My relationships are intense and unstable.", ar: "علاقاتي شديدة وغير مستقرة." } },
+            { category: "Borderline", text: { en: "I have trouble controlling my anger.", ar: "أجد صعوبة في السيطرة على غضبي." } },
+            { category: "Borderline", text: { en: "I sometimes feel like I don't know who I really am.", ar: "أحياناً أشعر أنني لا أعرف من أنا حقاً." } },
+            { category: "Borderline", text: { en: "I act impulsively when I am upset.", ar: "أتصرف بتهور عندما أكون منزعجاً." } },
+            { category: "Borderline", text: { en: "I move between loving and hating people quickly.", ar: "أتحول بين حب الناس وكرههم بسرعة." } },
+            { category: "Borderline", text: { en: "I have engaged in reckless behaviors.", ar: "لقد انخرطت في سلوكيات متهورة." } },
+            { category: "Borderline", text: { en: "I feel emotions much more intensely than others.", ar: "أشعر بالعواطف بحدة أكبر بكثير من الآخرين." } },
+            // Depressive
+            { category: "Depressive", text: { en: "I often feel down or hopeless.", ar: "غالباً ما أشعر بالإحباط أو اليأس." } },
+            { category: "Depressive", text: { en: "I have little energy to do things.", ar: "لدي طاقة قليلة جداً للقيام بالأشياء." } },
+            { category: "Depressive", text: { en: "I struggle to find pleasure in things I used to enjoy.", ar: "أجد صعوبة في الاستمتاع بالأشياء التي كنت أحبها." } },
+            { category: "Depressive", text: { en: "I feel worthless or guilty often.", ar: "أشعر بأنني بلا قيمة أو بالذنب كثيراً." } },
+            { category: "Depressive", text: { en: "The future looks bleak to me.", ar: "المستقبل يبدو كئيباً بالنسبة لي." } },
+            { category: "Depressive", text: { en: "I have trouble sleeping or sleep too much.", ar: "أعاني من مشاكل في النوم أو أنام كثيراً." } },
+            { category: "Depressive", text: { en: "I feel like a failure.", ar: "أشعر وكأنني فاشل." } },
+            { category: "Depressive", text: { en: "I often feel sad without a specific reason.", ar: "غالباً ما أشعر بالحزن دون سبب محدد." } },
+            { category: "Depressive", text: { en: "Everything feels like a huge effort.", ar: "كل شيء يبدو وكأنه يتطلب جهداً هائلاً." } },
+            { category: "Depressive", text: { en: "I isolate myself when I feel low.", ar: "أعزل نفسي عندما أشعر بالحزن." } },
+            // Anxiety
+            { category: "Anxiety", text: { en: "I worry excessively about many things.", ar: "أقلق بشكل مفرط بشأن العديد من الأشياء." } },
+            { category: "Anxiety", text: { en: "I feel restless or on edge.", ar: "أشعر بعدم الراحة أو التوتر المستمر." } },
+            { category: "Anxiety", text: { en: "My heart races for no apparent reason.", ar: "تتسارع دقات قلبي دون سبب واضح." } },
+            { category: "Anxiety", text: { en: "I have trouble relaxing.", ar: "أجد صعوبة في الاسترخاء." } },
+            { category: "Anxiety", text: { en: "I fear that something terrible will happen.", ar: "أخشى دائماً حدوث شيء فظيع." } },
+            { category: "Anxiety", text: { en: "I get easily startled.", ar: "أفزع بسهولة." } },
+            { category: "Anxiety", text: { en: "I have difficulty concentrating because of worry.", ar: "أجد صعوبة في التركيز بسبب القلق." } },
+            { category: "Anxiety", text: { en: "Social situations make me extremely nervous.", ar: "المواقف الاجتماعية تجعلني متوتراً للغاية." } },
+            { category: "Anxiety", text: { en: "I replay past conversations in my head.", ar: "أعيد تذكر المحادثات السابقة في رأسي مراراً." } },
+            { category: "Anxiety", text: { en: "I dread upcoming events.", ar: "أشعر بالرهبة تجاه الأحداث القادمة." } },
+            // Compulsive
+            { category: "Compulsive", text: { en: "I need things to be organized in a specific way.", ar: "أحتاج أن تكون الأشياء منظمة بطريقة محددة." } },
+            { category: "Compulsive", text: { en: "I check things repeatedly (like locks or switches).", ar: "أقوم بفحص الأشياء مراراً وتكراراً (مثل الأقفال)." } },
+            { category: "Compulsive", text: { en: "I am a perfectionist.", ar: "أنا شخص أبحث عن المثالية دائماً." } },
+            { category: "Compulsive", text: { en: "I get upset if my routine is disturbed.", ar: "أنزعج إذا تعطل روتيني اليومي." } },
+            { category: "Compulsive", text: { en: "I make detailed lists for everything.", ar: "أصنع قوائم مفصلة لكل شيء." } },
+            { category: "Compulsive", text: { en: "I have trouble discarding old items.", ar: "أجد صعوبة في التخلص من الأشياء القديمة." } },
+            { category: "Compulsive", text: { en: "I focus on details so much I miss the big picture.", ar: "أركز على التفاصيل لدرجة أنني أفقد الصورة الكبيرة." } },
+            { category: "Compulsive", text: { en: "I hold myself to impossibly high standards.", ar: "ألزم نفسي بمعايير عالية جداً وشبه مستحيلة." } },
+            { category: "Compulsive", text: { en: "I am very rigid about rules.", ar: "أنا صارم جداً بشأن القواعد." } },
+            { category: "Compulsive", text: { en: "Messiness causes me physical distress.", ar: "الفوضى تسبب لي ضيقاً جسدياً." } },
+            // Avoidant
+            { category: "Avoidant", text: { en: "I avoid social activities for fear of being criticized.", ar: "أتجنب الأنشطة الاجتماعية خوفاً من الانتقاد." } },
+            { category: "Avoidant", text: { en: "I feel inferior to others socially.", ar: "أشعر بالنقص مقارنة بالآخرين اجتماعياً." } },
+            { category: "Avoidant", text: { en: "I am very shy with new people.", ar: "أنا خجول جداً مع الأشخاص الجدد." } },
+            { category: "Avoidant", text: { en: "I worry constantly about being rejected.", ar: "أقلق باستمرار من التعرض للرفض." } },
+            { category: "Avoidant", text: { en: "I inhibit myself in relationships because of fear.", ar: "أكبح نفسي في العلاقات بسبب الخوف." } },
+            { category: "Avoidant", text: { en: "I view myself as socially inept.", ar: "أرى نفسي غير كفؤ اجتماعياً." } },
+            { category: "Avoidant", text: { en: "I am reluctant to take personal risks.", ar: "أنا متردد في المخاطرة الشخصية." } },
+            { category: "Avoidant", text: { en: "I prefer to be alone than to risk embarrassment.", ar: "أفضل أن أكون وحيداً على المخاطرة بالإحراج." } },
+            { category: "Avoidant", text: { en: "I am very sensitive to teasing.", ar: "أنا حساس جداً تجاه السخرية أو المزاح." } },
+            { category: "Avoidant", text: { en: "I feel invisible in groups.", ar: "أشعر بأنني غير مرئي في المجموعات." } },
+            // Paranoid
+            { category: "Paranoid", text: { en: "I suspect others are exploiting or deceiving me.", ar: "أشك في أن الآخرين يستغلونني أو يخدعونني." } },
+            { category: "Paranoid", text: { en: "I find it hard to trust friends or associates.", ar: "أجد صعوبة في الثقة بالأصدقاء أو الشركاء." } },
+            { category: "Paranoid", text: { en: "I read hidden demeaning meanings into benign remarks.", ar: "أفسر الملاحظات العادية على أنها إهانات مبطنة." } },
+            { category: "Paranoid", text: { en: "I hold grudges for a long time.", ar: "أحمل الضغينة لفترة طويلة." } },
+            { category: "Paranoid", text: { en: "I perceive attacks on my character that others don't see.", ar: "أشعر بهجمات على شخصيتي لا يراها الآخرون." } },
+            { category: "Paranoid", text: { en: "I am jealous and suspicious of my partner.", ar: "أنا غيور ومتشكك تجاه شريكي." } },
+            { category: "Paranoid", text: { en: "I am secretive because I fear information will be used against me.", ar: "أنا كتوم لأنني أخشى استخدام المعلومات ضدي." } },
+            { category: "Paranoid", text: { en: "I feel people are talking about me behind my back.", ar: "أشعر أن الناس يتحدثون عني خلف ظهري." } },
+            { category: "Paranoid", text: { en: "I am always on guard for betrayal.", ar: "أنا دائماً في حالة تأهب للخيانية." } },
+            { category: "Paranoid", text: { en: "The world is a hostile place.", ar: "العالم مكان معادٍ وخطير." } },
+            // Histrionic
+            { category: "Histrionic", text: { en: "I feel uncomfortable when I am not the center of attention.", ar: "أشعر بعدم الارتياح عندما لا أكون مركز الاهتمام." } },
+            { category: "Histrionic", text: { en: "I use my physical appearance to draw attention.", ar: "أستخدم مظهري الجسدي لجذب الانتباه." } },
+            { category: "Histrionic", text: { en: "My emotions are shallow and shift rapidly.", ar: "عواطفي سطحية وتتغير بسرعة." } },
+            { category: "Histrionic", text: { en: "I speak in a dramatic, impressionistic style.", ar: "أتحدث بأسلوب درامي وانطباعي." } },
+            { category: "Histrionic", text: { en: "I consider relationships to be more intimate than they are.", ar: "أعتبر العلاقات أكثر حميمية مما هي عليه في الواقع." } },
+            { category: "Histrionic", text: { en: "I am easily influenced by others.", ar: "أتأثر بالآخرين بسهولة." } },
+            { category: "Histrionic", text: { en: "I love excitement and get bored easily.", ar: "أحب الإثارة وأشعر بالملل بسهولة." } },
+            { category: "Histrionic", text: { en: "I can be overly seductive or provocative.", ar: "قد أكون مغرياً أو مستفزاً بشكل مبالغ فيه." } },
+            { category: "Histrionic", text: { en: "I exaggerate my emotions to get reactions.", ar: "أبالغ في عواطفي للحصول على ردود فعل." } },
+            { category: "Histrionic", text: { en: "I crave novelty and stimulation.", ar: "أتوق دائماً للتجديد والتحفيز." } },
+            // Schizoid
+            { category: "Schizoid", text: { en: "I neither desire nor enjoy close relationships.", ar: "لا أرغب في العلاقات الوثيقة ولا أستمتع بها." } },
+            { category: "Schizoid", text: { en: "I almost always choose solitary activities.", ar: "أختار الأنشطة الانفرادية دائماً تقريباً." } },
+            { category: "Schizoid", text: { en: "I have little interest in sexual experiences with others.", ar: "لدي اهتمام ضئيل بالتجارب الجنسية مع الآخرين." } },
+            { category: "Schizoid", text: { en: "I take pleasure in few, if any, activities.", ar: "أستمتع بقلة قليلة من الأنشطة، إن وجدت." } },
+            { category: "Schizoid", text: { en: "I lack close friends or confidants.", ar: "أفتقر إلى الأصدقاء المقربين." } },
+            { category: "Schizoid", text: { en: "I appear indifferent to the praise or criticism of others.", ar: "أبدو غير مبالٍ بمدح أو انتقاد الآخرين." } },
+            { category: "Schizoid", text: { en: "I feel emotionally cold or detached.", ar: "أشعر بالبرود العاطفي أو الانفصال." } },
+            { category: "Schizoid", text: { en: "I prefer to live in my own world.", ar: "أفضل العيش في عالمي الخاص." } },
+            { category: "Schizoid", text: { en: "I find social interactions draining and pointless.", ar: "أجد التفاعلات الاجتماعية منهكة وبلا جدوى." } },
+            { category: "Schizoid", text: { en: "I have a flat emotional response to most things.", ar: "رد فعلي العاطفي مسطح تجاه معظم الأشياء." } },
+            // Aggressive
+            { category: "Aggressive", text: { en: "I have a short temper.", ar: "أنا سريع الغضب." } },
+            { category: "Aggressive", text: { en: "I enjoy seeing people get what they deserve.", ar: "أستمتع برؤية الناس ينالون ما يستحقونه." } },
+            { category: "Aggressive", text: { en: "I get into arguments or fights easily.", ar: "أدخل في جدالات أو شجارات بسهولة." } },
+            { category: "Aggressive", text: { en: "I don't mind hurting people's feelings if they are wrong.", ar: "لا أمانع جرح مشاعر الناس إذا كانوا مخطئين." } },
+            { category: "Aggressive", text: { en: "I feel the urge to break things when angry.", ar: "أشعر برغبة في تحطيم الأشياء عندما أغضب." } },
+            { category: "Aggressive", text: { en: "Revenge is sweet.", ar: "الانتقام حلو." } },
+            { category: "Aggressive", text: { en: "I am often described as intimidating.", ar: "غالباً ما يصفني الناس بأنني مخيف أو مهيب." } },
+            { category: "Aggressive", text: { en: "I have little patience for stupidity.", ar: "لدي صبر قليل جداً تجاه الغباء." } },
+            { category: "Aggressive", text: { en: "I can be cruel if someone crosses me.", ar: "يمكنني أن أكون قاسياً إذا تجاوز أحدهم حدوده معي." } },
+            { category: "Aggressive", text: { en: "I enjoy positions of power where I can dominate others.", ar: "أستمتع بمناصب السلطة حيث يمكنني السيطرة على الآخرين." } }
+        ];
+
+        let currentLang = 'en';
+        let currentQuestionIndex = 0;
+        let scores = {};
+        let answerHistory = [];
+        let shuffledQuestions = [];
+        const questionCategories = Object.keys(categoriesTrans);
+
+        // --- APP LOGIC ---
+
+        function init() {
+            questionCategories.forEach(c => scores[c] = 0);
+
+            // Check Auto-Save
+            const saved = localStorage.getItem('soulHubProgress');
+            if (saved) {
+                document.getElementById('resume-container').classList.remove('hidden');
+            }
+
+            // Shuffle
+            shuffledQuestions = [...questions];
+            shuffleArray(shuffledQuestions);
+
+            // UI Setup
+            updateLanguageUI();
+            navigateTo('home');
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            updateLanguageUI();
+
+            // Re-render components if visible
+            if (!document.getElementById('page-quiz').classList.contains('hidden')) {
+                renderQuestion();
+                renderOptions();
+            }
+            if (!document.getElementById('page-result').classList.contains('hidden')) {
+                generateAnalysis();
+                renderChart();
+            }
+        }
+
+        function updateLanguageUI() {
+            const isAr = currentLang === 'ar';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+            document.getElementById('lang-text').innerText = isAr ? 'English' : 'عربي';
+            document.getElementById('lang-text-mobile').innerText = isAr ? 'Switch to English' : 'التبديل للعربية';
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key]; // innerHTML allows links or icons
+                }
+            });
+        }
+
+        function startQuiz() {
+            localStorage.removeItem('soulHubProgress');
+            answerHistory = [];
+            questionCategories.forEach(c => scores[c] = 0);
+            currentQuestionIndex = 0;
+            shuffleArray(shuffledQuestions);
+
+            navigateTo('quiz');
+            renderOptions();
+            renderQuestion();
+            document.getElementById('btn-back').classList.add('hidden');
+        }
+
+        function resumeQuiz() {
+            const saved = JSON.parse(localStorage.getItem('soulHubProgress'));
+            if (saved) {
+                currentQuestionIndex = saved.index;
+                scores = saved.scores;
+                answerHistory = saved.history;
+
+                navigateTo('quiz');
+                renderOptions();
+                renderQuestion();
+                if (currentQuestionIndex > 0) document.getElementById('btn-back').classList.remove('hidden');
+            }
+        }
+
+        function renderOptions() {
+            const container = document.getElementById('options-container');
+            const labels = [1, 2, 3, 4, 5];
+            const t = translations[currentLang];
+            const textLabels = [t.option_1, t.option_2, t.option_3, t.option_4, t.option_5];
+
+            container.innerHTML = labels.map((val, idx) => `
+                <button onclick="handleAnswer(${val})" class="btn-option w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-indigo-500 text-start flex items-center group transition-all">
+                    <span class="w-8 h-8 rounded-full border-2 border-slate-600 group-hover:border-indigo-500 ${currentLang === 'ar' ? 'ml-4' : 'mr-4'} flex items-center justify-center text-xs text-slate-500 group-hover:text-indigo-500 font-bold">${val}</span>
+                    <span class="text-slate-300 group-hover:text-white font-medium">${textLabels[idx]}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderQuestion() {
+            const q = shuffledQuestions[currentQuestionIndex];
+            const catName = categoriesTrans[q.category][currentLang];
+
+            document.getElementById('question-category').innerText = catName;
+            document.getElementById('question-text').innerText = q.text[currentLang];
+
+            const progress = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('question-tracker').innerText = `${currentQuestionIndex + 1} / ${shuffledQuestions.length}`;
+        }
+
+        function handleAnswer(value) {
+            const q = shuffledQuestions[currentQuestionIndex];
+            scores[q.category] += value;
+            answerHistory.push(value);
+
+            // Auto-Save
+            localStorage.setItem('soulHubProgress', JSON.stringify({
+                index: currentQuestionIndex + 1,
+                scores: scores,
+                history: answerHistory
+            }));
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                renderQuestion();
+                document.getElementById('btn-back').classList.remove('hidden');
+            } else {
+                localStorage.removeItem('soulHubProgress');
+                showLoading();
+            }
+        }
+
+        function goBack() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                const lastVal = answerHistory.pop();
+                const q = shuffledQuestions[currentQuestionIndex];
+                scores[q.category] -= lastVal;
+
+                renderQuestion();
+                if (currentQuestionIndex === 0) document.getElementById('btn-back').classList.add('hidden');
+
+                // Update Save
+                localStorage.setItem('soulHubProgress', JSON.stringify({
+                    index: currentQuestionIndex,
+                    scores: scores,
+                    history: answerHistory
+                }));
+            }
+        }
+
+        function showLoading() {
+            navigateTo('loading');
+            setTimeout(() => {
+                navigateTo('result');
+                renderChart();
+                generateAnalysis();
+            }, 1500);
+        }
+
+        function generateAnalysis() {
+            const statsGrid = document.getElementById('stats-grid');
+            let html = '';
+
+            const sortedKeys = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+            const dominantKey = sortedKeys[0];
+            const dominantPercent = Math.round((scores[dominantKey] / 50) * 100);
+
+            const descriptions = {
+                en: "High scores in this area indicate specific personality patterns. Read more in our library.",
+                ar: "تشير الدرجات العالية في هذا المجال إلى أنماط شخصية محددة. اقرأ المزيد في مكتبتنا."
+            };
+
+            const domName = categoriesTrans[dominantKey][currentLang];
+            document.getElementById('dominant-trait-desc').innerHTML = `<strong>${domName} (${dominantPercent}%)</strong>: ${descriptions[currentLang]}`;
+
+            sortedKeys.forEach(key => {
+                const percent = Math.round((scores[key] / 50) * 100);
+                const name = categoriesTrans[key][currentLang];
+                let color = percent > 75 ? 'bg-red-600' : percent > 50 ? 'bg-indigo-600' : 'bg-slate-700';
+
+                html += `
+                <div class="flex items-center justify-between group">
+                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
+                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full ${color}" style="width: ${percent}%"></div>
+                    </div>
+                    <span class="text-sm font-bold text-white w-10 text-end">${percent}%</span>
+                </div>`;
+            });
+            statsGrid.innerHTML = html;
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+
+            const labels = Object.keys(scores).map(k => categoriesTrans[k][currentLang]);
+            const data = Object.keys(scores).map(k => (scores[k] / 50) * 100);
+
+            if (window.myRadarChart) window.myRadarChart.destroy();
+
+            const fontFamily = currentLang === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif";
+
+            window.myRadarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: currentLang === 'en' ? 'Intensity' : 'الشدة',
+                        data: data,
+                        backgroundColor: 'rgba(99, 102, 241, 0.4)',
+                        borderColor: '#818cf8',
+                        pointBackgroundColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: {
+                                color: '#cbd5e1',
+                                font: { size: 11, family: fontFamily }
+                            },
+                            ticks: { display: false, max: 100, min: 0 }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { font: { family: fontFamily } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function downloadChart() {
+            const link = document.createElement('a');
+            link.download = 'soul-hub-result.png';
+            link.href = document.getElementById('radarChart').toDataURL();
+            link.click();
+        }
+
+        function shareResult(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = currentLang === 'en'
+                ? "I just analyzed my personality on Soul-Hub! Check it out:"
+                : "لقد قمت بتحليل شخصيتي على موقع Soul-Hub! جرب الاختبار:";
+
+            let shareUrl = '';
+            if (platform === 'fb') shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            if (platform === 'tw') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            if (platform === 'wa') shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
+
+            window.open(shareUrl, '_blank');
+        }
+
+        function resetQuiz() {
+            location.reload();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function navigateTo(pageId) {
+            ['home', 'about', 'contact', 'disclaimer', 'privacy', 'quiz', 'loading', 'result'].forEach(p => {
+                document.getElementById('page-' + p)?.classList.add('hidden');
+                document.getElementById('nav-' + p)?.classList.remove('active');
+            });
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+
+            const navs = ['home', 'about', 'contact', 'disclaimer', 'privacy'];
+            navs.forEach(n => document.getElementById('nav-' + n)?.classList.remove('active', 'text-white'));
+            document.getElementById('nav-' + pageId)?.classList.add('active', 'text-white');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // Initialize
+        init();
+        document.getElementById('nav-home').classList.add('active');
+
+    </script>
+</body>
+
+</html>

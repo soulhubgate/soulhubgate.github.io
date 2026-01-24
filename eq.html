@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Test | Soul-Hub</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        html[lang="ar"] body {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+
+    <div id="app-container"
+        class="w-full max-w-5xl glass-panel rounded-2xl flex flex-col relative overflow-hidden h-[90vh]">
+        <div
+            class="absolute top-0 left-0 w-32 h-32 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob pointer-events-none">
+        </div>
+        <div
+            class="absolute top-0 right-0 w-32 h-32 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000 pointer-events-none">
+        </div>
+
+        <div id="nav-placeholder"></div>
+
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 relative">
+
+            <div id="page-home" class="text-center mt-12 fade-in">
+                <div class="mb-6 inline-block p-4 rounded-full bg-yellow-500/20 text-yellow-300">
+                    <i class="fas fa-lightbulb text-5xl"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-300"
+                    data-i18n="card_eq_title">
+                    Emotional Intelligence Test
+                </h1>
+                <p class="text-lg text-slate-300 mb-10 max-w-lg mx-auto leading-relaxed" data-i18n="card_eq_desc">
+                    Assess your ability to perceive, control, and evaluate emotions. Measures Self-Awareness,
+                    Self-Regulation, Motivation, Empathy, and Social Skills.
+                </p>
+                <button onclick="startQuiz()"
+                    class="px-8 py-4 bg-yellow-600 hover:bg-yellow-500 text-white font-bold rounded-xl shadow-lg shadow-yellow-500/30 transition-all transform hover:scale-105"
+                    data-i18n="btn_start">
+                    Begin Assessment
+                </button>
+            </div>
+
+            <div id="page-quiz" class="hidden fade-in max-w-2xl mx-auto mt-4">
+                <div class="flex justify-between text-xs text-slate-400 mb-2 uppercase tracking-wide">
+                    <span data-i18n="progress">Progress</span>
+                    <span id="question-tracker">1 / 50</span>
+                </div>
+                <div class="w-full bg-slate-700 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="progress-bar"
+                        class="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full transition-all duration-300"
+                        style="width: 0%"></div>
+                </div>
+
+                <div class="mb-2 text-center">
+                    <span id="question-category"
+                        class="text-xs font-bold text-yellow-400 tracking-widest uppercase bg-yellow-900/30 px-3 py-1 rounded-full">Domain</span>
+                </div>
+
+                <h2 id="question-text"
+                    class="text-2xl md:text-3xl font-bold text-white text-center mb-10 min-h-[100px] flex items-center justify-center">
+                    Loading...
+                </h2>
+
+                <div id="options-container" class="space-y-3"></div>
+
+                <div class="flex justify-between mt-8">
+                    <button id="btn-back" onclick="goBack()"
+                        class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-slate-300 text-sm hidden"
+                        data-i18n="btn_back">
+                        <i class="fas fa-arrow-left mr-2 rtl:rotate-180"></i> Back
+                    </button>
+                </div>
+            </div>
+
+            <div id="page-result" class="hidden fade-in w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                        <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <i class="fas fa-chart-pie text-yellow-400"></i> Your EQ Profile
+                        </h2>
+                        <canvas id="radarChart" class="w-full max-h-[400px]"></canvas>
+                        <div class="mt-6 flex gap-4">
+                            <button onclick="shareResult('wa')"
+                                class="flex-1 py-3 bg-green-600 hover:bg-green-500 rounded-xl text-white font-bold transition-all"><i
+                                    class="fab fa-whatsapp"></i> WhatsApp</button>
+                            <button onclick="shareResult('tw')"
+                                class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
+                                    class="fab fa-twitter"></i> Twitter</button>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700/50">
+                            <h3 class="text-xl font-bold text-white mb-4">Detailed Breakdown</h3>
+                            <div id="stats-grid" class="space-y-4"></div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <a href="blog.html"
+                                class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-indigo-500/20 transition-all">Read
+                                Full Analysis in Library</a>
+                            <button onclick="location.reload()"
+                                class="w-full py-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-xl transition-all">Retake
+                                Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // EQ Domains: Self-Awareness (SA), Self-Regulation (SR), Motivation (MO), Empathy (EM), Social Skills (SS)
+        const categoriesTrans = {
+            "SA": { en: "Self-Awareness", ar: "الوعي الذاتي" },
+            "SR": { en: "Self-Regulation", ar: "التنظيم الذاتي" },
+            "MO": { en: "Motivation", ar: "التحفيز" },
+            "EM": { en: "Empathy", ar: "التعاطف" },
+            "SS": { en: "Social Skills", ar: "المهارات الاجتماعية" }
+        };
+
+        // 50 Questions (10 per domain) - abbreviated list for template, actually expanded in full implementation
+        const questions = [
+            // Self-Awareness
+            { category: "SA", text: { en: "I can name my emotions as I feel them.", ar: "أستطيع تسمية مشاعري لحظة شعوري بها." } },
+            { category: "SA", text: { en: "I understand how my mood affects my behavior.", ar: "أفهم كيف يؤثر مزاجي على سلوكي." } },
+            { category: "SA", text: { en: "I know my strengths and weaknesses.", ar: "أعرف نقاط قوتي وضعفي." } },
+            { category: "SA", text: { en: "I am aware of my physiological signs of stress.", ar: "أنا مدرك لعلامات التوتر الجسدية لدي." } },
+            { category: "SA", text: { en: "I verify my feelings with others.", ar: "أتحقق من مشاعري مع الآخرين." } },
+            { category: "SA", text: { en: "I often don't know why I feel the way I do. (Reverse)", ar: "غالباً لا أعرف لماذا أشعر بهذه الطريقة. (عكسي)" }, reverse: true },
+            { category: "SA", text: { en: "I am surprised by my own reactions. (Reverse)", ar: "أتفاجأ بردود أفعالي. (عكسي)" }, reverse: true },
+            { category: "SA", text: { en: "I have trouble describing my feelings. (Reverse)", ar: "أجد صعوبة في وصف مشاعري. (عكسي)" }, reverse: true },
+            { category: "SA", text: { en: "I ignore my feelings to get things done. (Reverse)", ar: "أتجاهل مشاعري لإنجاز الأمور. (عكسي)" }, reverse: true },
+            { category: "SA", text: { en: "I feel like my emotions control me. (Reverse)", ar: "أشعر أن عواطفي تسيطر علي. (عكسي)" }, reverse: true },
+
+            // Self-Regulation
+            { category: "SR", text: { en: "I can calm myself down when angry.", ar: "أستطيع تهدئة نفسي عندما أغضب." } },
+            { category: "SR", text: { en: "I think before I act.", ar: "أفكر قبل أن أتصرف." } },
+            { category: "SR", text: { en: "I handle pressure well.", ar: "أتعامل مع الضغط بشكل جيد." } },
+            { category: "SR", text: { en: "I am adaptable to change.", ar: "أنا قابل للتكيف مع التغيير." } },
+            { category: "SR", text: { en: "I stay focused under stress.", ar: "أحافظ على تركيزي تحت الضغط." } },
+            { category: "SR", text: { en: "I impulsively interrupt others. (Reverse)", ar: "أقاطع الآخرين بشكل متهور. (عكسي)" }, reverse: true },
+            { category: "SR", text: { en: "I lash out when frustrated. (Reverse)", ar: "أنفعل بشدة عندما أشعر بالإحباط. (عكسي)" }, reverse: true },
+            { category: "SR", text: { en: "I have trouble managing disappointment. (Reverse)", ar: "أجد صعوبة في التعامل مع خيبة الأمل. (عكسي)" }, reverse: true },
+            { category: "SR", text: { en: "I panic in emergencies. (Reverse)", ar: "أصاب بالذعر في حالات الطوارئ. (عكسي)" }, reverse: true },
+            { category: "SR", text: { en: "I hold grudges easily. (Reverse)", ar: "أحمل الضغائن بسهولة. (عكسي)" }, reverse: true },
+
+            // Motivation
+            { category: "MO", text: { en: "I set measurable goals for myself.", ar: "أضع أهدافاً قابلة للقياس لنفسي." } },
+            { category: "MO", text: { en: "I am driven by achievement, not just money.", ar: "يدفعني الإنجاز، ليس المال فقط." } },
+            { category: "MO", text: { en: "I stay optimistic despite setbacks.", ar: "أبقى متفائلاً رغم النكسات." } },
+            { category: "MO", text: { en: "I look for ways to improve.", ar: "أبحث عن طرق للتحسن." } },
+            { category: "MO", text: { en: "I initiate new projects.", ar: "أبادر بمشاريع جديدة." } },
+            { category: "MO", text: { en: "I give up easily when things get hard. (Reverse)", ar: "أستسلم بسهولة عندما تصبح الأمور صعبة. (عكسي)" }, reverse: true },
+            { category: "MO", text: { en: "I procrastinate often. (Reverse)", ar: "أماطل كثيراً. (عكسي)" }, reverse: true },
+            { category: "MO", text: { en: "I lack direction in life. (Reverse)", ar: "أفتقر إلى الاتجاه في الحياة. (عكسي)" }, reverse: true },
+            { category: "MO", text: { en: "I am afraid of failure so I don't try. (Reverse)", ar: "أخاف من الفشل لذا لا أحاول. (عكسي)" }, reverse: true },
+            { category: "MO", text: { en: "I focus on the negative. (Reverse)", ar: "أركز على السلبيات. (عكسي)" }, reverse: true },
+
+            // Empathy
+            { category: "EM", text: { en: "I can sense how others are feeling.", ar: "أستطيع استشعار مشاعر الآخرين." } },
+            { category: "EM", text: { en: "I am a good listener.", ar: "أنا مستمع جيد." } },
+            { category: "EM", text: { en: "I understand non-verbal cues.", ar: "أفهم الإشارات غير اللفظية." } },
+            { category: "EM", text: { en: "I see things from others' perspectives.", ar: "أرى الأمور من وجهة نظر الآخرين." } },
+            { category: "EM", text: { en: "I am sensitive to cultural differences.", ar: "أنا حساس للاختلافات الثقافية." } },
+            { category: "EM", text: { en: "I have trouble comforting others. (Reverse)", ar: "أجد صعوبة في مواساة الآخرين. (عكسي)" }, reverse: true },
+            { category: "EM", text: { en: "I don't care about others' problems. (Reverse)", ar: "لا أهتم بمشاكل الآخرين. (عكسي)" }, reverse: true },
+            { category: "EM", text: { en: "I misread social situations. (Reverse)", ar: "أسيء فهم المواقف الاجتماعية. (عكسي)" }, reverse: true },
+            { category: "EM", text: { en: "People think I am cold. (Reverse)", ar: "يعتقد الناس أنني بارد المشاعر. (عكسي)" }, reverse: true },
+            { category: "EM", text: { en: "I interrupt people often. (Reverse)", ar: "أقاطع الناس كثيراً. (عكسي)" }, reverse: true },
+
+            // Social Skills
+            { category: "SS", text: { en: "I am good at resolving conflicts.", ar: "أنا جيد في حل النزاعات." } },
+            { category: "SS", text: { en: "I can build rapport easily.", ar: "أستطيع بناء علاقات بسهولة." } },
+            { category: "SS", text: { en: "I am an effective communicator.", ar: "أنا محاور فعال." } },
+            { category: "SS", text: { en: "I inspire others.", ar: "أنا ألهم الآخرين." } },
+            { category: "SS", text: { en: "I work well in teams.", ar: "أعمل بشكل جيد في الفرق." } },
+            { category: "SS", text: { en: "I avoid social interactions. (Reverse)", ar: "أتجنب التفاعلات الاجتماعية. (عكسي)" }, reverse: true },
+            { category: "SS", text: { en: "I have trouble making friends. (Reverse)", ar: "أجد صعوبة في تكوين صداقات. (عكسي)" }, reverse: true },
+            { category: "SS", text: { en: "I am uncomfortable leading others. (Reverse)", ar: "لا أرتاح لقيادة الآخرين. (عكسي)" }, reverse: true },
+            { category: "SS", text: { en: "I struggle to persuade others. (Reverse)", ar: "أجد صعوبة في إقناع الآخرين. (عكسي)" }, reverse: true },
+            { category: "SS", text: { en: "I am socially awkward. (Reverse)", ar: "أشعر بالحرج الاجتماعي. (عكسي)" }, reverse: true }
+        ];
+
+        let scores = { "SA": 0, "SR": 0, "MO": 0, "EM": 0, "SS": 0 };
+        let currentQuestionIndex = 0;
+        let shuffledQuestions = [];
+        let answerHistory = [];
+
+        function init() {
+            window.handleLanguageChange = (lang) => {
+                currentLang = lang;
+                updateText();
+                if (currentQuestionIndex < 50) renderQuestion();
+                else renderChart();
+            };
+            shuffleArray(questions);
+            shuffledQuestions = questions;
+        }
+
+        function updateText() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) el.innerHTML = translations[currentLang][key];
+            });
+        }
+
+        function startQuiz() {
+            document.getElementById('page-home').classList.add('hidden');
+            document.getElementById('page-quiz').classList.remove('hidden');
+            scores = { "SA": 0, "SR": 0, "MO": 0, "EM": 0, "SS": 0 };
+            currentQuestionIndex = 0;
+            renderOptions();
+            renderQuestion();
+        }
+
+        function renderOptions() {
+            const container = document.getElementById('options-container');
+            const labels = [1, 2, 3, 4, 5];
+            const t = translations[currentLang];
+            const textLabels = [t.option_1, t.option_2, t.option_3, t.option_4, t.option_5];
+
+            container.innerHTML = labels.map((val, idx) => `
+                <button onclick="handleAnswer(${val})" class="btn-option w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-yellow-500 text-start flex items-center group transition-all">
+                    <span class="w-8 h-8 rounded-full border-2 border-slate-600 group-hover:border-yellow-500 me-4 flex items-center justify-center text-xs text-slate-500 group-hover:text-yellow-500 font-bold">${val}</span>
+                    <span class="text-slate-300 group-hover:text-white font-medium">${textLabels[idx]}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderQuestion() {
+            const q = shuffledQuestions[currentQuestionIndex];
+            const catName = categoriesTrans[q.category][currentLang];
+            document.getElementById('question-category').innerText = catName;
+            document.getElementById('question-text').innerText = q.text[currentLang];
+
+            const progress = ((currentQuestionIndex) / 50) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('question-tracker').innerText = `${currentQuestionIndex + 1} / 50`;
+
+            if (currentQuestionIndex > 0) document.getElementById('btn-back').classList.remove('hidden');
+            else document.getElementById('btn-back').classList.add('hidden');
+        }
+
+        function handleAnswer(val) {
+            const q = shuffledQuestions[currentQuestionIndex];
+            let score = val;
+            if (q.reverse) score = 6 - val;
+
+            scores[q.category] += score;
+            answerHistory.push(score);
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < 50) renderQuestion();
+            else showResult();
+        }
+
+        function goBack() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                const lastScore = answerHistory.pop();
+                const q = shuffledQuestions[currentQuestionIndex];
+                scores[q.category] -= lastScore;
+                renderQuestion();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('page-quiz').classList.add('hidden');
+            document.getElementById('page-result').classList.remove('hidden');
+            renderChart();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            const labels = Object.keys(scores).map(k => categoriesTrans[k][currentLang]);
+            const data = Object.keys(scores).map(k => (scores[k] / 50) * 100);
+
+            if (window.myRadarChart) window.myRadarChart.destroy();
+            const fontFamily = currentLang === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif";
+
+            window.myRadarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: currentLang === 'en' ? 'Percentile' : 'النسبة المئوية',
+                        data: data,
+                        backgroundColor: 'rgba(234, 179, 8, 0.4)',
+                        borderColor: '#eab308',
+                        pointBackgroundColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#cbd5e1', font: { size: 12, family: fontFamily } },
+                            ticks: { display: false, max: 100, min: 0 }
+                        }
+                    },
+                    plugins: { legend: { labels: { font: { family: fontFamily } } } }
+                }
+            });
+
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = Object.keys(scores).map(k => {
+                const pct = Math.round((scores[k] / 50) * 100);
+                const name = categoriesTrans[k][currentLang];
+                return `
+                 <div class="flex items-center justify-between group">
+                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
+                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full bg-yellow-500" style="width: ${pct}%"></div>
+                    </div>
+                    <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function shareResult(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = currentLang === 'en' ? "My Emotional Intelligence Result:" : "نتيجتي في اختبار الذكاء العاطفي:";
+            let shareUrl = '';
+            if (platform === 'wa') shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
+            if (platform === 'tw') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

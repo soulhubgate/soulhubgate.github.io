@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Profiler | Soul-Hub</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        html[lang="ar"] body {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-orange-900 to-slate-900">
+
+    <div id="app-container"
+        class="w-full max-w-5xl glass-panel rounded-2xl flex flex-col relative overflow-hidden h-[90vh]">
+        <div
+            class="absolute top-0 left-0 w-32 h-32 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob pointer-events-none">
+        </div>
+        <div
+            class="absolute top-0 right-0 w-32 h-32 bg-amber-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000 pointer-events-none">
+        </div>
+
+        <div id="nav-placeholder"></div>
+
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 relative">
+
+            <div id="page-home" class="text-center mt-12 fade-in">
+                <div class="mb-6 inline-block p-4 rounded-full bg-orange-500/20 text-orange-300">
+                    <i class="fas fa-briefcase text-5xl"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-amber-300"
+                    data-i18n="card_career_title">
+                    Career Interest Profiler
+                </h1>
+                <p class="text-lg text-slate-300 mb-10 max-w-lg mx-auto leading-relaxed" data-i18n="card_career_desc">
+                    Find the perfect career path based on your interests. Based on the Holland Code (RIASEC): Realistic,
+                    Investigative, Artistic, Social, Enterprising, Conventional.
+                </p>
+                <button onclick="startQuiz()"
+                    class="px-8 py-4 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl shadow-lg shadow-orange-500/30 transition-all transform hover:scale-105"
+                    data-i18n="btn_start">
+                    Begin Assessment
+                </button>
+            </div>
+
+            <div id="page-quiz" class="hidden fade-in max-w-2xl mx-auto mt-4">
+                <div class="flex justify-between text-xs text-slate-400 mb-2 uppercase tracking-wide">
+                    <span data-i18n="progress">Progress</span>
+                    <span id="question-tracker">1 / 50</span>
+                </div>
+                <div class="w-full bg-slate-700 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="progress-bar"
+                        class="bg-gradient-to-r from-orange-500 to-amber-500 h-2 rounded-full transition-all duration-300"
+                        style="width: 0%"></div>
+                </div>
+
+                <div class="mb-2 text-center">
+                    <span id="question-category"
+                        class="text-xs font-bold text-orange-400 tracking-widest uppercase bg-orange-900/30 px-3 py-1 rounded-full">Interest
+                        Area</span>
+                </div>
+
+                <h2 id="question-text"
+                    class="text-2xl md:text-3xl font-bold text-white text-center mb-10 min-h-[100px] flex items-center justify-center">
+                    Loading...
+                </h2>
+
+                <div id="options-container" class="space-y-3"></div>
+
+                <div class="flex justify-between mt-8">
+                    <button id="btn-back" onclick="goBack()"
+                        class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-slate-300 text-sm hidden"
+                        data-i18n="btn_back">
+                        <i class="fas fa-arrow-left mr-2 rtl:rotate-180"></i> Back
+                    </button>
+                </div>
+            </div>
+
+            <div id="page-result" class="hidden fade-in w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                        <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <i class="fas fa-chart-pie text-orange-400"></i> Career Interests
+                        </h2>
+                        <canvas id="radarChart" class="w-full max-h-[400px]"></canvas>
+                        <div class="mt-6 flex gap-4">
+                            <button onclick="shareResult('wa')"
+                                class="flex-1 py-3 bg-green-600 hover:bg-green-500 rounded-xl text-white font-bold transition-all"><i
+                                    class="fab fa-whatsapp"></i> WhatsApp</button>
+                            <button onclick="shareResult('tw')"
+                                class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
+                                    class="fab fa-twitter"></i> Twitter</button>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700/50">
+                            <h3 class="text-xl font-bold text-white mb-4">Detailed Breakdown</h3>
+                            <div id="stats-grid" class="space-y-4"></div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <a href="blog.html"
+                                class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-indigo-500/20 transition-all">Read
+                                Careers Guide in Library</a>
+                            <button onclick="location.reload()"
+                                class="w-full py-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-xl transition-all">Retake
+                                Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Dimensions: Realistic, Investigative, Artistic, Social, Enterprising, Conventional
+
+        const categoriesTrans = {
+            "R": { en: "Realistic (Doers)", ar: "واقعي (المنفذون)" },
+            "I": { en: "Investigative (Thinkers)", ar: "استقصائي (المفكرون)" },
+            "A": { en: "Artistic (Creators)", ar: "فني (المبدعون)" },
+            "S": { en: "Social (Helpers)", ar: "اجتماعي (المساعدون)" },
+            "E": { en: "Enterprising (Persuaders)", ar: "مقدام (المؤثرون)" },
+            "C": { en: "Conventional (Organizers)", ar: "تقليدي (المنظمون)" }
+        };
+
+        // 60 Qs usually for RIASEC (10 each). We will do ~8-9 per category to hit ~50-something. 
+        // Let's do 8 per category = 48 questions. Close enough to 50+.
+
+        const questions = [
+            // Realistic (R)
+            { category: "R", text: { en: "Build kitchen cabinets.", ar: "بناء خزائن المطبخ." } },
+            { category: "R", text: { en: "Lay brick or tile.", ar: "تركيب الطوب أو البلاط." } },
+            { category: "R", text: { en: "Repair household appliances.", ar: "إصلاح الأجهزة المنزلية." } },
+            { category: "R", text: { en: "Drive a truck to deliver parcels.", ar: "قيادة شاحنة لتوصيل الطرود." } },
+            { category: "R", text: { en: "Assemble electronic parts.", ar: "تجميع الأجزاء الإلكترونية." } },
+            { category: "R", text: { en: "Operate heavy machinery.", ar: "تشغيل الآلات الثقيلة." } },
+            { category: "R", text: { en: "Work outdoors.", ar: "العمل في الهواء الطلق." } },
+            { category: "R", text: { en: "Do physical labor.", ar: "القيام بعمل بدني." } },
+
+            // Investigative (I)
+            { category: "I", text: { en: "Study the structure of the human body.", ar: "دراسة بنية جسم الإنسان." } },
+            { category: "I", text: { en: "Conduct chemical experiments.", ar: "إجراء تجارب كيميائية." } },
+            { category: "I", text: { en: "Analyze financial data.", ar: "تحليل البيانات المالية." } },
+            { category: "I", text: { en: "Solve complex mathematical problems.", ar: "حل المسائل الرياضية المعقدة." } },
+            { category: "I", text: { en: "Study the stars and planets.", ar: "دراسة النجوم والكواكب." } },
+            { category: "I", text: { en: "Diagnose medical conditions.", ar: "تشخيص الحالات الطبية." } },
+            { category: "I", text: { en: "Read scientific journals.", ar: "قراءة المجلات العلمية." } },
+            { category: "I", text: { en: "Work in a research laboratory.", ar: "العمل في مختبر أبحاث." } },
+
+            // Artistic (A)
+            { category: "A", text: { en: "Write scripts for movies or TV.", ar: "كتابة سيناريوهات للأفلام أو التلفزيون." } },
+            { category: "A", text: { en: "Perform jazz/dance/music.", ar: "أداء الجاز/الرقص/الموسيقى." } },
+            { category: "A", text: { en: "Paint or draw portraits.", ar: "رسم لوحات شخصية." } },
+            { category: "A", text: { en: "Design graphic art.", ar: "تصميم فن الجرافيك." } },
+            { category: "A", text: { en: "Write stories or articles.", ar: "كتابة قصص أو مقالات." } },
+            { category: "A", text: { en: "Design clothing or interiors.", ar: "تصميم الملابس أو الديكور الداخلي." } },
+            { category: "A", text: { en: "Attend concerts or galleries.", ar: "حضور الحفلات الموسيقية أو المعارض." } },
+            { category: "A", text: { en: "Express yourself creatively.", ar: "التعبير عن نفسك بشكل إبداعي." } },
+
+            // Social (S)
+            { category: "S", text: { en: "Teach children or adults.", ar: "تدريس الأطفال أو الكبار." } },
+            { category: "S", text: { en: "Help people solve personal problems.", ar: "مساعدة الناس في حل المشاكل الشخصية." } },
+            { category: "S", text: { en: "Do volunteer work at a non-profit.", ar: "القيام بعمل تطوعي في منظمة غير ربحية." } },
+            { category: "S", text: { en: "Care for sick or injured people.", ar: "رعاية المرضى أو المصابين." } },
+            { category: "S", text: { en: "Lead group therapy sessions.", ar: "قيادة جلسات العلاج الجماعي." } },
+            { category: "S", text: { en: "Supervise social workers.", ar: "الإشراف على الأخصائيين الاجتماعيين." } },
+            { category: "S", text: { en: "Give advice to friends.", ar: "تقديم النصيحة للأصدقاء." } },
+            { category: "S", text: { en: "Work in a team.", ar: "العمل ضمن فريق." } },
+
+            // Enterprising (E)
+            { category: "E", text: { en: "Sell products or services.", ar: "بيع المنتجات أو الخدمات." } },
+            { category: "E", text: { en: "Manage a department or store.", ar: "إدارة قسم أو متجر." } },
+            { category: "E", text: { en: "Start your own business.", ar: "بدء مشروعك الخاص." } },
+            { category: "E", text: { en: "Negotiate business contracts.", ar: "التفاوض على عقود تجارية." } },
+            { category: "E", text: { en: "Lead a sales team.", ar: "قيادة فريق مبيعات." } },
+            { category: "E", text: { en: "Give speeches or presentations.", ar: "إلقاء الخطب أو العروض التقديمية." } },
+            { category: "E", text: { en: "Persuade others to your viewpoint.", ar: "إقناع الآخرين بوجهة نظرك." } },
+            { category: "E", text: { en: "Invest in stocks or real estate.", ar: "الاستثمار في الأسهم أو العقارات." } },
+
+            // Conventional (C)
+            { category: "C", text: { en: "Keep detailed records of expenses.", ar: "الاحتفاظ بسجلات مفصلة للنفقات." } },
+            { category: "C", text: { en: "Organize files and documents.", ar: "تنظيم الملفات والمستندات." } },
+            { category: "C", text: { en: "Write reports based on data.", ar: "كتابة تقارير بناءً على البيانات." } },
+            { category: "C", text: { en: "Balance a checkbook.", ar: "موازنة دفتر الشيكات." } },
+            { category: "C", text: { en: "Create spreadsheets/databases.", ar: "إنشاء جداول بيانات/قواعد بيانات." } },
+            { category: "C", text: { en: "Audit financial records.", ar: "تدقيق السجلات المالية." } },
+            { category: "C", text: { en: "Follow procedures exactly.", ar: "اتباع الإجراءات بدقة." } },
+            { category: "C", text: { en: "Work with numbers.", ar: "العمل مع الأرقام." } }
+        ];
+
+        let scores = { "R": 0, "I": 0, "A": 0, "S": 0, "E": 0, "C": 0 };
+        let currentQuestionIndex = 0;
+        let shuffledQuestions = [];
+        let answerHistory = [];
+
+        function init() {
+            window.handleLanguageChange = (lang) => {
+                currentLang = lang;
+                updateText();
+                if (currentQuestionIndex < 48) renderQuestion();
+                else renderChart();
+            };
+            shuffleArray(questions);
+            shuffledQuestions = questions;
+        }
+
+        function updateText() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) el.innerHTML = translations[currentLang][key];
+            });
+        }
+
+        function startQuiz() {
+            document.getElementById('page-home').classList.add('hidden');
+            document.getElementById('page-quiz').classList.remove('hidden');
+            scores = { "R": 0, "I": 0, "A": 0, "S": 0, "E": 0, "C": 0 };
+            currentQuestionIndex = 0;
+            renderOptions();
+            renderQuestion();
+        }
+
+        function renderOptions() {
+            const container = document.getElementById('options-container');
+            // Career tests are often like/dislike. Let's stick to 1-5 for nuance, mapping to "Dislike" -> "Like"
+            const labels = [1, 2, 3, 4, 5];
+            const t = translations[currentLang];
+            const textLabels = [t.option_1, t.option_2, t.option_3, t.option_4, t.option_5];
+
+            container.innerHTML = labels.map((val, idx) => `
+                <button onclick="handleAnswer(${val})" class="btn-option w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-orange-500 text-start flex items-center group transition-all">
+                    <span class="w-8 h-8 rounded-full border-2 border-slate-600 group-hover:border-orange-500 me-4 flex items-center justify-center text-xs text-slate-500 group-hover:text-orange-500 font-bold">${val}</span>
+                    <span class="text-slate-300 group-hover:text-white font-medium">${textLabels[idx]}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderQuestion() {
+            const q = shuffledQuestions[currentQuestionIndex];
+            const catName = categoriesTrans[q.category][currentLang];
+            document.getElementById('question-category').innerText = catName;
+            document.getElementById('question-text').innerText = q.text[currentLang];
+
+            const progress = ((currentQuestionIndex) / 48) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('question-tracker').innerText = `${currentQuestionIndex + 1} / 48`;
+
+            if (currentQuestionIndex > 0) document.getElementById('btn-back').classList.remove('hidden');
+            else document.getElementById('btn-back').classList.add('hidden');
+        }
+
+        function handleAnswer(val) {
+            const q = shuffledQuestions[currentQuestionIndex];
+            // Simple sum
+            scores[q.category] += val;
+            answerHistory.push(val);
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < 48) renderQuestion();
+            else showResult();
+        }
+
+        function goBack() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                const lastScore = answerHistory.pop();
+                const q = shuffledQuestions[currentQuestionIndex];
+                scores[q.category] -= lastScore;
+                renderQuestion();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('page-quiz').classList.add('hidden');
+            document.getElementById('page-result').classList.remove('hidden');
+            renderChart();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            const labels = Object.keys(scores).map(k => categoriesTrans[k][currentLang]);
+
+            // Normalize: 8 items * 5 = 40 max.
+            const data = Object.keys(scores).map(k => (scores[k] / 40) * 100);
+
+            if (window.myRadarChart) window.myRadarChart.destroy();
+            const fontFamily = currentLang === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif";
+
+            window.myRadarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: currentLang === 'en' ? 'Interest Level' : 'مستوى الاهتمام',
+                        data: data,
+                        backgroundColor: 'rgba(249, 115, 22, 0.4)',
+                        borderColor: '#f97316',
+                        pointBackgroundColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#cbd5e1', font: { size: 10, family: fontFamily } },
+                            ticks: { display: false, max: 100, min: 0 }
+                        }
+                    },
+                    plugins: { legend: { labels: { font: { family: fontFamily } } } }
+                }
+            });
+
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = Object.keys(scores).map(k => {
+                const pct = Math.round((scores[k] / 40) * 100);
+                const name = categoriesTrans[k][currentLang];
+                return `
+                 <div class="flex items-center justify-between group">
+                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
+                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full bg-orange-500" style="width: ${pct}%"></div>
+                    </div>
+                    <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function shareResult(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = currentLang === 'en' ? "My Career Interests Result:" : "نتيجتي في اختبار الميول المهنية:";
+            let shareUrl = '';
+            if (platform === 'wa') shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
+            if (platform === 'tw') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
