@@ -78,9 +78,12 @@ function renderNavbar() {
                     class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-full text-xs text-white border border-slate-600 transition-colors flex items-center gap-1 ml-4">
                     <i class="fas fa-globe"></i> <span id="lang-text">${translations[currentLang].switch_lang}</span>
                 </button>
-                 <button class="px-3 py-1 bg-pink-600 hover:bg-pink-500 rounded-full text-xs text-white border border-pink-500 transition-colors flex items-center gap-1 shadow-lg shadow-pink-500/20">
-                    <i class="fas fa-heart"></i> <span data-i18n="donate_text">${translations[currentLang].donate_text}</span>
-                </button>
+                 <a href="https://buymeacoffee.com/aahmeddgalal" target="_blank" rel="noopener noreferrer">
+  <button class="px-3 py-1 bg-pink-600 hover:bg-pink-500 rounded-full text-xs text-white border border-pink-500 transition-colors flex items-center gap-1 shadow-lg shadow-pink-500/20">
+    <i class="fas fa-heart"></i>
+    <span data-i18n="donate_text">${translations[currentLang].donate_text}</span>
+  </button>
+</a>
             </div>
 
             <!-- Mobile Menu Button -->
@@ -110,3 +113,4 @@ function renderNavbar() {
         applyLanguage(currentLang);
     }
 }
+
