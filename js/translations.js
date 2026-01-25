@@ -50,7 +50,7 @@ const translations = {
 
         // Common
         footer_text: "© 2025 Soul-Hub. Developed with ❤️.",
-        donate_text: "Support Soul-Hub",
+        donate_text: "Buy Me A Coffee!",
         switch_lang: "عربي",
         progress: "Progress",
         btn_back: "Previous",
@@ -148,3 +148,4 @@ const translations = {
         option_5: "أوافق بشدة"
     }
 };
+
