@@ -5,6 +5,7 @@ const translations = {
         nav_library: "Library",
         nav_about: "About Me",
         nav_contact: "Contact",
+        nav_support: "Support",
         nav_disclaimer: "Disclaimer",
         nav_privacy: "Privacy",
 
@@ -79,6 +80,7 @@ const translations = {
         nav_library: "المكتبة",
         nav_about: "عني",
         nav_contact: "تواصل معي",
+        nav_support: "دعم",
         nav_disclaimer: "إخلاء مسؤولية",
         nav_privacy: "الخصوصية",
 
