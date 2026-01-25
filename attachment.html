@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attachment Test | Soul-Hub</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cairo:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        html[lang="ar"] body {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+
+    <div id="app-container"
+        class="w-full max-w-5xl glass-panel rounded-2xl flex flex-col relative overflow-hidden h-[90vh]">
+        <div
+            class="absolute top-0 left-0 w-32 h-32 bg-red-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob pointer-events-none">
+        </div>
+        <div
+            class="absolute top-0 right-0 w-32 h-32 bg-rose-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000 pointer-events-none">
+        </div>
+
+        <div id="nav-placeholder"></div>
+
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 relative">
+
+            <div id="page-home" class="text-center mt-12 fade-in">
+                <div class="mb-6 inline-block p-4 rounded-full bg-red-500/20 text-red-300">
+                    <i class="fas fa-anchor text-5xl"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-rose-300"
+                    data-i18n="card_attach_title">
+                    Attachment Style Test
+                </h1>
+                <p class="text-lg text-slate-300 mb-10 max-w-lg mx-auto leading-relaxed" data-i18n="card_attach_desc">
+                    Discover how you bond with others. Measures Secure, Anxious-Preoccupied, Dismissive-Avoidant, and
+                    Fearful-Avoidant styles.
+                </p>
+                <button onclick="startQuiz()"
+                    class="px-8 py-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl shadow-lg shadow-red-500/30 transition-all transform hover:scale-105"
+                    data-i18n="btn_start">
+                    Begin Assessment
+                </button>
+            </div>
+
+            <div id="page-quiz" class="hidden fade-in max-w-2xl mx-auto mt-4">
+                <div class="flex justify-between text-xs text-slate-400 mb-2 uppercase tracking-wide">
+                    <span data-i18n="progress">Progress</span>
+                    <span id="question-tracker">1 / 50</span>
+                </div>
+                <div class="w-full bg-slate-700 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="progress-bar"
+                        class="bg-gradient-to-r from-red-500 to-rose-500 h-2 rounded-full transition-all duration-300"
+                        style="width: 0%"></div>
+                </div>
+
+                <div class="mb-2 text-center">
+                    <span id="question-category"
+                        class="text-xs font-bold text-red-400 tracking-widest uppercase bg-red-900/30 px-3 py-1 rounded-full">Dimension</span>
+                </div>
+
+                <h2 id="question-text"
+                    class="text-2xl md:text-3xl font-bold text-white text-center mb-10 min-h-[100px] flex items-center justify-center">
+                    Loading...
+                </h2>
+
+                <div id="options-container" class="space-y-3"></div>
+
+                <div class="flex justify-between mt-8">
+                    <button id="btn-back" onclick="goBack()"
+                        class="px-6 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-slate-300 text-sm hidden"
+                        data-i18n="btn_back">
+                        <i class="fas fa-arrow-left mr-2 rtl:rotate-180"></i> Back
+                    </button>
+                </div>
+            </div>
+
+            <div id="page-result" class="hidden fade-in w-full">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                        <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <i class="fas fa-chart-pie text-red-400"></i> Attachment Profile
+                        </h2>
+                        <canvas id="radarChart" class="w-full max-h-[400px]"></canvas>
+                        <div class="mt-6 flex gap-4">
+                            <button onclick="shareResult('wa')"
+                                class="flex-1 py-3 bg-green-600 hover:bg-green-500 rounded-xl text-white font-bold transition-all"><i
+                                    class="fab fa-whatsapp"></i> WhatsApp</button>
+                            <button onclick="shareResult('tw')"
+                                class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
+                                    class="fab fa-twitter"></i> Twitter</button>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700/50">
+                            <h3 class="text-xl font-bold text-white mb-4">Detailed Breakdown</h3>
+                            <div id="stats-grid" class="space-y-4"></div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <a href="blog.html"
+                                class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-indigo-500/20 transition-all">Read
+                                Full Analysis in Library</a>
+                            <button onclick="location.reload()"
+                                class="w-full py-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-xl transition-all">Retake
+                                Test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Dimensions: Anxiety, Avoidance. 
+        // Styles: Secure (Low Anx, Low Avoid), Anxious (High Anx, Low Avoid), Dismissive (Low Anx, High Avoid), Fearful (High Anx, High Avoid)
+        // For chart, we display Anxiety and Avoidance scores directly, or we can map to the 4 quadrants.
+        // Let's output "Anxiety" and "Avoidance" scores + 2 proxy scores for "Security" (Reverse Anx + Reverse Avoid) to make a 4-point radar? 
+        // Or better: Display all 4 styles matching categories.
+        // SEC (Secure), ANX (Preoccupied), DIS (Dismissive), FEA (Fearful)
+
+        const categoriesTrans = {
+            "SEC": { en: "Secure", ar: "آمن" },
+            "ANX": { en: "Anxiety", ar: "قلق" },
+            "AVO": { en: "Avoidance", ar: "تجنب" }
+        };
+
+        // We will measure Anxiety and Avoidance mainly.
+        // Then calculate Secure = (Low Anx + Low Avoid), Fearful = (High Anx + High Avoid)?
+        // Simplest for user understanding: Radar of "Anxiety Scale" and "Avoidance Scale".
+        // But user asked for multiple categories. Let's do 3 dimensions: Secure-Base, Anxiety, Avoidance.
+
+        // 50 Questions. Mostly about Anxiety and Avoidance.
+
+        const questions = [
+            // Anxiety Items
+            { category: "ANX", text: { en: "I worry that romantic partners won't care about me as much as I care about them.", ar: "أخشى أن شركائي العاطفيين لن يهتموا بي بقدر اهتمامي بهم." } },
+            { category: "ANX", text: { en: "I worry a lot about my relationships.", ar: "أقلق كثيراً بشأن علاقاتي." } },
+            { category: "ANX", text: { en: "When my partner is out of sight, I worry they might become interested in someone else.", ar: "عندما يغيب شريكي عن ناظري، أقلق من احتمال اهتمامه بشخص آخر." } },
+            { category: "ANX", text: { en: "I worry that I am not good enough for others.", ar: "أخشى أنني لست جيداً بما يكفي للآخرين." } },
+            { category: "ANX", text: { en: "I feel that I need a lot of reassurance.", ar: "أشعر أنني بحاجة إلى الكثير من الطمأنة." } },
+            { category: "ANX", text: { en: "I get frustrated when my partner is not available.", ar: "أشعر بالإحباط عندما لا يكون شريكي متاحاً." } },
+            { category: "ANX", text: { en: "I worry about being abandoned.", ar: "أقلق بشأن تعرضي للهجر." } },
+            { category: "ANX", text: { en: "I crave intimacy but worry about scaring people away.", ar: "أتوق للحميمية ولكني أخشى إخافة الناس." } },
+            { category: "ANX", text: { en: "I overanalyze their text messages.", ar: "أبالغ في تحليل رسائلهم النصية." } },
+            { category: "ANX", text: { en: "I rarely worry about my partner leaving me. (Reverse)", ar: "نادراً ما أقلق من ترك شريكي لي. (عكسي)" }, reverse: true },
+
+            { category: "ANX", text: { en: "I need constant contact.", ar: "أحتاج إلى تواصل مستمر." } },
+            { category: "ANX", text: { en: "I take it personally when they don't reply quickly.", ar: "آخذ الأمر بشكل شخصي عندما لا يردون بسرعة." } },
+            { category: "ANX", text: { en: "I feel dependent on my partners.", ar: "أشعر بالاعتماد على شركائي." } },
+            { category: "ANX", text: { en: "I often feel unloved.", ar: "غالباً ما أشعر بأنني غير محبوب." } },
+            { category: "ANX", text: { en: "I fear being alone.", ar: "أخشى الوحدة." } },
+            { category: "ANX", text: { en: "I am confident in my partner's love. (Reverse)", ar: "أنا واثق من حب شريكي. (عكسي)" }, reverse: true },
+            { category: "ANX", text: { en: "I don't need much reassurance. (Reverse)", ar: "لا أحتاج الكثير من الطمأنة. (عكسي)" }, reverse: true },
+            { category: "ANX", text: { en: "I feel secure in my value. (Reverse)", ar: "أشعر بالأمان تجاه قيمتي. (عكسي)" }, reverse: true },
+            { category: "ANX", text: { en: "I trust my partner implicitly. (Reverse)", ar: "أثق بشريكي ثقة مطلقة. (عكسي)" }, reverse: true },
+            { category: "ANX", text: { en: "I am relaxed in relationships. (Reverse)", ar: "أنا مسترخٍ في العلاقات. (عكسي)" }, reverse: true },
+
+            // Avoidance Items
+            { category: "AVO", text: { en: "I prefer not to show others how I feel.", ar: "أفضل عدم إظهار مشاعري للآخرين." } },
+            { category: "AVO", text: { en: "I prefer to be independent/self-sufficient.", ar: "أفضل أن أكون مستقلاً/مكتفياً ذاتياً." } },
+            { category: "AVO", text: { en: "I am uncomfortable being too close to others.", ar: "أشعر بعدم الارتياح عند القرب الشديد من الآخرين." } },
+            { category: "AVO", text: { en: "I find it difficult to depend on people.", ar: "أجد صعوبة في الاعتماد على الناس." } },
+            { category: "AVO", text: { en: "I don't open up easily.", ar: "لا أنفتح بسهولة." } },
+            { category: "AVO", text: { en: "I pull away when things get too intimate.", ar: "أبتعد عندما تصبح الأمور حميمة جداً." } },
+            { category: "AVO", text: { en: "I value my freedom above all else.", ar: "أقدر حريتي فوق كل شيء." } },
+            { category: "AVO", text: { en: "I prefer casual relationships.", ar: "أفضل العلاقات العابرة." } },
+            { category: "AVO", text: { en: "I don't like discussing my feelings.", ar: "لا أحب مناقشة مشاعري." } },
+            { category: "AVO", text: { en: "I am very comfortable with intimacy. (Reverse)", ar: "أرتاح جداً للحميمية. (عكسي)" }, reverse: true },
+
+            { category: "AVO", text: { en: "I share my secrets comfortably. (Reverse)", ar: "أشارك أسراري بارتياح. (عكسي)" }, reverse: true },
+            { category: "AVO", text: { en: "I turn to my partner for support. (Reverse)", ar: "ألجأ لشريكي للدعم. (عكسي)" }, reverse: true },
+            { category: "AVO", text: { en: "I like being close to my partner. (Reverse)", ar: "أحب القرب من شريكي. (عكسي)" }, reverse: true },
+            { category: "AVO", text: { en: "I rely on my partner. (Reverse)", ar: "أعتمد على شريكي. (عكسي)" }, reverse: true },
+            { category: "AVO", text: { en: "I tell my partner everything. (Reverse)", ar: "أخبر شريكي بكل شيء. (عكسي)" }, reverse: true },
+            { category: "AVO", text: { en: "I keep people at a distance.", ar: "أبقي الناس على مسافة." } },
+            { category: "AVO", text: { en: "Emotional situations make me uncomfortable.", ar: "المواقف العاطفية تشعرني بعدم الارتياح." } },
+            { category: "AVO", text: { en: "I deal with problems on my own.", ar: "أتعامل مع المشاكل بمفردي." } },
+            { category: "AVO", text: { en: "I don't need a partner to be happy.", ar: "لا أحتاج شريكاً لأكون سعيداً." } },
+            { category: "AVO", text: { en: "I feel trapped easily.", ar: "أشعر بأنني محاصر بسهولة." } },
+
+            // Security Items (Explicitly measuring secure traits)
+            { category: "SEC", text: { en: "I find it relatively easy to get close to others.", ar: "أجد أنه من السهل نسبياً التقرب من الآخرين." } },
+            { category: "SEC", text: { en: "I am comfortable depending on others and having them depend on me.", ar: "أرتاح للاعتماد على الآخرين واعتمادهم علي." } },
+            { category: "SEC", text: { en: "I don't worry about being abandoned.", ar: "لا أقلق بشأن تعرضي للهجر." } },
+            { category: "SEC", text: { en: "I communicate my needs clearly.", ar: "أعبر عن احتياجاتي بوضوح." } },
+            { category: "SEC", text: { en: "I resolve conflicts constructively.", ar: "أحل النزاعات بشكل بناء." } },
+            { category: "SEC", text: { en: "I have trust in others.", ar: "لدي ثقة في الآخرين." } },
+            { category: "SEC", text: { en: "I am supportive of my partner's goals.", ar: "أنا داعم لأهداف شريكي." } },
+            { category: "SEC", text: { en: "I respect boundaries.", ar: "أحترم الحدود." } },
+            { category: "SEC", text: { en: "I have a positive view of myself and others.", ar: "لدي نظرة إيجابية لنفسي وللآخرين." } },
+            { category: "SEC", text: { en: "I handle breakups in a healthy way.", ar: "أتعامل مع الانفصال بطريقة صحية." } }
+        ];
+
+        let scores = { "SEC": 0, "ANX": 0, "AVO": 0 };
+        let currentQuestionIndex = 0;
+        let shuffledQuestions = [];
+        let answerHistory = [];
+
+        function init() {
+            window.handleLanguageChange = (lang) => {
+                currentLang = lang;
+                updateText();
+                if (currentQuestionIndex < 50) renderQuestion();
+                else renderChart();
+            };
+            shuffleArray(questions);
+            shuffledQuestions = questions;
+        }
+
+        function updateText() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) el.innerHTML = translations[currentLang][key];
+            });
+        }
+
+        function startQuiz() {
+            document.getElementById('page-home').classList.add('hidden');
+            document.getElementById('page-quiz').classList.remove('hidden');
+            scores = { "SEC": 0, "ANX": 0, "AVO": 0 };
+            currentQuestionIndex = 0;
+            renderOptions();
+            renderQuestion();
+        }
+
+        function renderOptions() {
+            const container = document.getElementById('options-container');
+            const labels = [1, 2, 3, 4, 5];
+            const t = translations[currentLang];
+            const textLabels = [t.option_1, t.option_2, t.option_3, t.option_4, t.option_5];
+
+            container.innerHTML = labels.map((val, idx) => `
+                <button onclick="handleAnswer(${val})" class="btn-option w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-red-500 text-start flex items-center group transition-all">
+                    <span class="w-8 h-8 rounded-full border-2 border-slate-600 group-hover:border-red-500 me-4 flex items-center justify-center text-xs text-slate-500 group-hover:text-red-500 font-bold">${val}</span>
+                    <span class="text-slate-300 group-hover:text-white font-medium">${textLabels[idx]}</span>
+                </button>
+            `).join('');
+        }
+
+        function renderQuestion() {
+            const q = shuffledQuestions[currentQuestionIndex];
+            const catName = categoriesTrans[q.category][currentLang];
+            document.getElementById('question-category').innerText = catName;
+            document.getElementById('question-text').innerText = q.text[currentLang];
+
+            const progress = ((currentQuestionIndex) / 50) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('question-tracker').innerText = `${currentQuestionIndex + 1} / 50`;
+
+            if (currentQuestionIndex > 0) document.getElementById('btn-back').classList.remove('hidden');
+            else document.getElementById('btn-back').classList.add('hidden');
+        }
+
+        function handleAnswer(val) {
+            const q = shuffledQuestions[currentQuestionIndex];
+            let score = val;
+            if (q.reverse) score = 6 - val;
+
+            scores[q.category] += score;
+            answerHistory.push(score);
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < 50) renderQuestion();
+            else showResult();
+        }
+
+        function goBack() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                const lastScore = answerHistory.pop();
+                const q = shuffledQuestions[currentQuestionIndex];
+                scores[q.category] -= lastScore;
+                renderQuestion();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('page-quiz').classList.add('hidden');
+            document.getElementById('page-result').classList.remove('hidden');
+            renderChart();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            const labels = Object.keys(scores).map(k => categoriesTrans[k][currentLang]);
+
+            // Normalize scores. 
+            // SEC has 10 items (max 50) -> norm to 100 is *2
+            // ANX has 20 items (max 100) -> norm to 100 is *1
+            // AVO has 20 items (max 100) -> norm to 100 is *1
+
+            const data = [
+                (scores.SEC / 50) * 100,
+                (scores.ANX / 100) * 100, // ANX is 20 items
+                (scores.AVO / 100) * 100  // AVO is 20 items
+            ];
+
+            if (window.myRadarChart) window.myRadarChart.destroy();
+            const fontFamily = currentLang === 'ar' ? "'Cairo', sans-serif" : "'Inter', sans-serif";
+
+            window.myRadarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: currentLang === 'en' ? 'Level' : 'المستوى',
+                        data: data,
+                        backgroundColor: 'rgba(244, 63, 94, 0.4)',
+                        borderColor: '#f43f5e',
+                        pointBackgroundColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#cbd5e1', font: { size: 12, family: fontFamily } },
+                            ticks: { display: false, max: 100, min: 0 }
+                        }
+                    },
+                    plugins: { legend: { labels: { font: { family: fontFamily } } } }
+                }
+            });
+
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = labels.map((name, i) => {
+                const pct = Math.round(data[i]);
+                return `
+                 <div class="flex items-center justify-between group">
+                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
+                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full bg-red-500" style="width: ${pct}%"></div>
+                    </div>
+                    <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function shareResult(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const text = currentLang === 'en' ? "My Attachment Style Result:" : "نتيجتي في اختبار نمط التعلق:";
+            let shareUrl = '';
+            if (platform === 'wa') shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
+            if (platform === 'tw') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
