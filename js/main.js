@@ -98,6 +98,10 @@ function renderNavbar() {
              <a href="tests.html" class="${getMobileClasses('tests')}" data-i18n="nav_tests">Tests</a>
              <a href="blog.html" class="${getMobileClasses('library')}" data-i18n="nav_library">Library</a>
              <a href="about.html" class="${getMobileClasses('about')}" data-i18n="nav_about">About Me</a>
+             <a href="https://buymeacoffee.com/aahmeddgalal" target="_blank" rel="noopener noreferrer" class="text-left text-pink-400 py-2 font-bold flex items-center gap-2 pl-4">
+                <i class="fas fa-heart"></i>
+                <span data-i18n="donate_text">${translations[currentLang].donate_text}</span>
+             </a>
              <button onclick="toggleLanguage(); location.reload();" class="text-left text-indigo-300 py-2 font-bold flex items-center gap-2 pl-4">
                 <i class="fas fa-globe"></i> Switch Language
             </button>
@@ -113,4 +117,5 @@ function renderNavbar() {
         applyLanguage(currentLang);
     }
 }
+
 
