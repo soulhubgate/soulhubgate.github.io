@@ -49,6 +49,7 @@ function renderNavbar() {
         if (name === 'home') return p === '' || p === 'index.html';
         if (name === 'tests') return p === 'tests.html' || p === 'clinical.html' || p === 'mbti.html' || p === 'love.html' || p === 'bigfive.html' || p === 'eq.html' || p === 'attachment.html' || p === 'darktriad.html' || p === 'career.html';
         if (name === 'library') return p === 'blog.html';
+        if (name === 'support') return p === 'discover.html';
         if (name === 'about') return p === 'about.html';
         return false;
     };
@@ -73,6 +74,7 @@ function renderNavbar() {
                 <a href="tests.html" class="${getClasses('tests')}" data-i18n="nav_tests">Tests</a>
                 <a href="blog.html" class="${getClasses('library')}" data-i18n="nav_library">Library</a>
                 <a href="about.html" class="${getClasses('about')}" data-i18n="nav_about">About Me</a>
+                <a href="discover.html" class="${getClasses('support')}" data-i18n="nav_support">Support</a>
                 
                 <button onclick="toggleLanguage()"
                     class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded-full text-xs text-white border border-slate-600 transition-colors flex items-center gap-1 ml-4">
@@ -98,6 +100,7 @@ function renderNavbar() {
              <a href="tests.html" class="${getMobileClasses('tests')}" data-i18n="nav_tests">Tests</a>
              <a href="blog.html" class="${getMobileClasses('library')}" data-i18n="nav_library">Library</a>
              <a href="about.html" class="${getMobileClasses('about')}" data-i18n="nav_about">About Me</a>
+             <a href="discover.html" class="${getMobileClasses('support')}" data-i18n="nav_support">Support</a>
              <a href="https://buymeacoffee.com/aahmeddgalal" target="_blank" rel="noopener noreferrer" class="text-left text-pink-400 py-2 font-bold flex items-center gap-2 pl-4">
                 <i class="fas fa-heart"></i>
                 <span data-i18n="donate_text">${translations[currentLang].donate_text}</span>
