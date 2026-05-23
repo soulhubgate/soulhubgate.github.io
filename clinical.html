@@ -519,11 +519,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                     class="fab fa-whatsapp"></i></button>
                         </div>
 
-                        <div class="bg-indigo-900/20 border border-indigo-500/30 p-4 rounded-xl">
-                            <h3 class="text-indigo-300 font-bold mb-1" data-i18n="primary_pattern">Primary Pattern</h3>
-                            <p id="dominant-trait-desc" class="text-slate-200 text-sm leading-relaxed"></p>
-                            <a href="blog.html" class="block mt-3 text-xs text-indigo-400 hover:text-white underline"
-                                data-i18n="read_more_lib">Read more in Library</a>
+                        <div id="dominant-profile-card"></div>
+                        
+                        <div class="mt-6 bg-slate-800/40 border border-slate-700 p-6 rounded-2xl">
+                            <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2" id="cluster-analysis-title">DSM-5 Cluster Analysis</h3>
+                            <div id="clusters-grid" class="space-y-4"></div>
                         </div>
                     </div>
 
@@ -602,6 +602,199 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             "Histrionic": { en: "Histrionic", ar: "الشخصية الهستيرية" },
             "Schizoid": { en: "Schizoid", ar: "الشخصية شبه الفصامية" },
             "Aggressive": { en: "Aggressive", ar: "الشخصية العدوانية" }
+        };
+
+        const dsm5Profiles = {
+            "Narcissism": {
+                cluster: { en: "Cluster B (Dramatic / Erratic)", ar: "المجموعة ب (درامي / متقلب)" },
+                dsmContext: {
+                    en: "Characterized by grandiosity, a need for admiration, and a lack of empathy, starting in early adulthood.",
+                    ar: "يتميز بنمط مستمر من العظمة، والحاجة المفرطة للتقدير والإعجاب، والافتقار للتعاطف مع الآخرين."
+                },
+                subclinical: {
+                    en: "Strong leadership skills, high self-esteem, decisive ambition, and impressive public speaking abilities.",
+                    ar: "مهارات قيادية متميزة، تقدير ذاتي قوي، طموح حاسم، وقدرة ممتازة على التعبير والتأثير الجماهيري."
+                },
+                clinical: {
+                    en: "An extreme sense of entitlement, exploiting relationships, hypersensitivity to criticism or failure, and fragile self-worth.",
+                    ar: "شعور مفرط بالاستحقاق، استغلال العلاقات لصالح الذات، حساسية شديدة للنقد أو الفشل، وهشاشة كامنة في صورة الذات."
+                },
+                treatment: {
+                    en: "Individual Cognitive Behavioral Therapy (CBT) focusing on empathy building, and Schema Therapy to resolve core self-worth issues.",
+                    ar: "العلاج السلوكي المعرفي الفردي (CBT) الذي يركز على بناء التعاطف، وعلاج المخططات النفسية لحل جذور تقدير الذات الهش."
+                }
+            },
+            "Borderline": {
+                cluster: { en: "Cluster B (Dramatic / Erratic)", ar: "المجموعة ب (درامي / متقلب)" },
+                dsmContext: {
+                    en: "Characterized by a pervasive pattern of instability in affect, self-image, interpersonal relationships, and marked impulsivity.",
+                    ar: "يتسم بنمط شامل من عدم الاستقرار في المشاعر، وصورة الذات، والعلاقات الشخصية، مع اندفاعية واضحة وحادة."
+                },
+                subclinical: {
+                    en: "Deep emotional intelligence, passionate bonds, expressive creativity, and strong capacity for interpersonal connection.",
+                    ar: "ذكاء عاطفي ونفسي عميق، روابط عاطفية حية وشغوفة، طاقة إبداعية تعبيرية، وقدرة عالية على الارتباط الإنساني."
+                },
+                clinical: {
+                    en: "Intense fear of abandonment, chronic emptiness, cognitive splitting (black-and-white thinking), self-harm tendencies, and emotional dysregulation.",
+                    ar: "خوف شديد من الهجر، شعور مزمن بالفراغ والملل، انشطار معرفي (تفكير أبيض وأسود)، سلوكيات إيذاء الذات، وتقلب انفعالي حاد."
+                },
+                treatment: {
+                    en: "Dialectical Behavior Therapy (DBT) focusing on mindfulness, distress tolerance, and emotional regulation is the clinical gold standard.",
+                    ar: "العلاج الجدلي السلوكي (DBT) المرتكز على اليقظة الذهنية، تحمل الضيق النفسي، وتنظيم الانفعالات يمثل المعيار الذهبي."
+                }
+            },
+            "Depressive": {
+                cluster: { en: "Mood & Affective Syndrome", ar: "المتلازمات المزاجية والوجدانية" },
+                dsmContext: {
+                    en: "Characterized by persistent depressed mood, anhedonia, sleep disruptions, energy depletion, and feelings of worthlessness.",
+                    ar: "يتميز بنمط مستمر من هبوط المزاج، وفقدان اللذة والاستمتاع، واضطراب النوم، ونقص الحيوية، ومشاعر عدم القيمة."
+                },
+                subclinical: {
+                    en: "Realistic appraisal, deep analytical abilities, philosophical serious-mindedness, and high self-reflection.",
+                    ar: "تقييم واقعي للأمور، قدرات تحليلية فلسفية وعميقة، جدية متزنة في الحياة، ووعي ذاتي تأملي مرتفع."
+                },
+                clinical: {
+                    en: "Persistent clinical hopelessness, chronic fatigue, social isolation, vegetative depressive symptoms, and cognitive stagnation.",
+                    ar: "يأس سريري مستمر، خمول وجسدي مفرط، عزلة اجتماعية حادة، أعراض اكتئاب جسدية، وبطء في التفكير والمعالجة."
+                },
+                treatment: {
+                    en: "Cognitive Behavioral Therapy (CBT) for depression, Behavioral Activation protocols, and consult for pharmacological evaluation (SSRIs).",
+                    ar: "العلاج السلوكي المعرفي (CBT) للاكتئاب، بروتوكولات التنشيط السلوكي، واستشارة الطبيب لتقييم الدواء (SSRIs)."
+                }
+            },
+            "Anxiety": {
+                cluster: { en: "Anxiety & Somatic Syndrome", ar: "متلازمات القلق والاضطرابات الجسدية" },
+                dsmContext: {
+                    en: "Characterized by excessive, uncontrollable worry, autonomic hyperarousal, muscle tension, and restlessness.",
+                    ar: "يتسم بقلق مفرط وصعب السيطرة عليه، يقظة عصبية لا إرادية، توتر عضلي مستمر، وتململ بدني."
+                },
+                subclinical: {
+                    en: "Superb risk evaluation, thorough proactive preparation, high details sensitivity, and highly conscientious work ethic.",
+                    ar: "تقييم ممتاز للمخاطر، استعداد استباقي دقيق، حساسية عالية للتفاصيل، وأخلاقيات عمل ملتزمة ويقظة."
+                },
+                clinical: {
+                    en: "Paralyzing worry cycles, panic attacks, physical symptoms (heart racing, dyspnea), avoidant behavior, and chronic distress.",
+                    ar: "دورة قلق مشلة للحركة، نوبات هلع مفاجئة، أعراض جسدية (خفقان، ضيق تنفس)، سلوك تجنبي، وضغط نفسي مزمن."
+                },
+                treatment: {
+                    en: "CBT focusing on cognitive reframing, Mindfulness-Based Stress Reduction (MBSR), progressive muscle relaxation, and exposure therapy.",
+                    ar: "العلاج السلوكي المعرفي لإعادة التأطير، تقليل التوتر باليقظة الذهنية (MBSR)، تمارين الاسترخاء العضلي، والتعريض التدريجي."
+                }
+            },
+            "Compulsive": {
+                cluster: { en: "Cluster C (Anxious / Fearful)", ar: "المجموعة ج (قلق / متخوف)" },
+                dsmContext: {
+                    en: "Preoccupation with orderliness, perfectionism, mental and interpersonal control, at the expense of flexibility and efficiency.",
+                    ar: "انشغال مفرط بالنظام، والمثالية البالغة، والتحكم العقلي والشخصي على حساب المرونة والكفاءة والانفتاح."
+                },
+                subclinical: {
+                    en: "Incredible attention to detail, reliability, stellar productivity, high quality standard, and structured lifestyle.",
+                    ar: "اهتمام مذهل بالتفاصيل، موثوقية عالية، إنتاجية فائقة، معايير جودة رفيعة، ونمط حياة منظم ومخطط."
+                },
+                clinical: {
+                    en: "Rigid perfectionism that interferes with task completion, inability to delegate, extreme inflexibility about rules, hoarding tendencies.",
+                    ar: "مثالية صلبة تعطل إتمام المهام، عجز تام عن تفويض الآخرين، مرونة معدومة تجاه القوانين، ونزعة للاحتفاظ بالأشياء."
+                },
+                treatment: {
+                    en: "CBT focusing on cognitive flexibility, and Exposure and Response Prevention (ERP) to tolerate minor disorder or mistakes.",
+                    ar: "العلاج السلوكي المعرفي لزيادة المرونة المعرفية، والعلاج بالتعريض ومنع الاستجابة (ERP) لتقبل الأخطاء البسيطة والفوضى."
+                }
+            },
+            "Avoidant": {
+                cluster: { en: "Cluster C (Anxious / Fearful)", ar: "المجموعة ج (قلق / متخوف)" },
+                dsmContext: {
+                    en: "Pervasive pattern of social inhibition, feelings of inadequacy, and hypersensitivity to negative evaluation.",
+                    ar: "نمط شامل من الكبح الاجتماعي، ومشاعر النقص والقصور الذاتي، وحساسية مفرطة لأي تقييم أو نقد سلبي."
+                },
+                subclinical: {
+                    en: "Gentle, polite, and deeply considerate demeanor, reflective nature, and highly respectful boundary adherence.",
+                    ar: "سلوك لطيف ومهذب ومراعٍ لمشاعر الآخرين، طبيعة هادئة وتأملية، والتزام محترم بحدود وخصوصية الغير."
+                },
+                clinical: {
+                    en: "Avoiding occupational activities with social contact, fear of criticism, viewing self as socially inept or personally unappealing.",
+                    ar: "تجنب الأنشطة المهنية ذات الاحتكاك الاجتماعي، خوف مرضي من النقد، ورؤية الذات كفاشل أو غير جذاب اجتماعياً."
+                },
+                treatment: {
+                    en: "Social skills training groups, Cognitive therapy to reframe social fear, and systematic desensitization / exposure therapy.",
+                    ar: "مجموعات التدريب على المهارات الاجتماعية، العلاج المعرفي لإعادة صياغة الخوف، والتعريض التدريجي الممنهج للمواقف."
+                }
+            },
+            "Paranoid": {
+                cluster: { en: "Cluster A (Odd / Eccentric)", ar: "المجموعة أ (غريب / ارتيابي)" },
+                dsmContext: {
+                    en: "Characterized by a pervasive distrust and suspiciousness of others such that their motives are interpreted as malevolent.",
+                    ar: "يتسم بنمط شامل من الشك والارتياب غير المبرر في الآخرين وتفسير نواياهم وتصرفاتهم على أنها عدائية."
+                },
+                subclinical: {
+                    en: "Sharp critical thinking, keen observational vigilance, deep self-reliance, and outstanding discernment capabilities.",
+                    ar: "تفكير نقدي حاد وحاذق، يقظة عالية وقدرة ممتازة على الملاحظة، اعتماد كامل على النفس، وفراسة مميزة."
+                },
+                clinical: {
+                    en: "Pervasive suspicion of deception without sufficient basis, holding persistent grudges, reading hidden threats in harmless events.",
+                    ar: "شك مرضي بالتعرض للخيانة دون أساس كافٍ، حمل مستمر للأحقاد، وتفسير الملاحظات البريئة كتهديدات مبطنة."
+                },
+                treatment: {
+                    en: "Psychotherapy focusing on building a stable therapeutic alliance, and cognitive reframing of core mistrust assumptions.",
+                    ar: "العلاج النفسي المرتكز على بناء تحالف علاجي مستقر، وإعادة التأطير المعرفي لافتراضات الشك والعدائية الأساسية."
+                }
+            },
+            "Histrionic": {
+                cluster: { en: "Cluster B (Dramatic / Erratic)", ar: "المجموعة ب (درامي / متقلب)" },
+                dsmContext: {
+                    en: "Characterized by a pervasive pattern of excessive emotionality and attention-seeking behavior.",
+                    ar: "يتميز بنمط مستمر من الانفعالية الزائدة عن الحد وسلوكيات البحث الدائم والمفرط عن الاهتمام واللفت."
+                },
+                subclinical: {
+                    en: "Highly charismatic, socially engaging, expressive, creative storyteller, and enthusiastic communicator.",
+                    ar: "شخصية كاريزمية جذابة، تفاعل اجتماعي مبهج، قدرة تعبيرية عالية، مهارة في سرد القصص، وتواصل حماسي."
+                },
+                clinical: {
+                    en: "Discomfort in situations where they are not the center of attention, shallow and rapidly shifting emotional expressions, theatrical behavior.",
+                    ar: "انزعاج شديد عندما لا يكون مركز انتباه الجميع، تعبيرات عاطفية مسرحية متقلبة وسرعة التغير، وسلوك استعراضي."
+                },
+                treatment: {
+                    en: "Psychotherapy focusing on developing emotional depth and vocabulary, and cognitive coaching to build authentic self-esteem.",
+                    ar: "العلاج النفسي الذي يستهدف بناء عمق عاطفي حقيقي، والكوتشينغ المعرفي لتقدير الذات من الداخل بدلاً من طلب التقييم الخارجي."
+                }
+            },
+            "Schizoid": {
+                cluster: { en: "Cluster A (Odd / Eccentric)", ar: "المجموعة أ (غريب / ارتيابي)" },
+                dsmContext: {
+                    en: "Characterized by a pervasive pattern of detachment from social relationships and a restricted range of expression of emotions.",
+                    ar: "يتسم بنمط شامل من الانفصال الكامل عن العلاقات الاجتماعية ومحدودية شديدة في التعبير عن العواطف والمشاعر."
+                },
+                subclinical: {
+                    en: "Absolute independence, peaceful and quiet nature, high self-sufficiency, and rich inner conceptual world.",
+                    ar: "استقلالية تامة، طبيعة هادئة ومسالمة، اكتفاء ذاتي ممتاز، وعالم داخلي فكري خصب ومريح."
+                },
+                clinical: {
+                    en: "Neither desiring nor enjoying close relationships, preferring solitary activities, showing coldness and emotional flatness.",
+                    ar: "لا يرغب ولا يستمتع بالعلاقات المقربة، يفضل الأنشطة الفردية تماماً، ويظهر بروداً وتسطحاً وجدانياً تاماً."
+                },
+                treatment: {
+                    en: "Psychodynamic therapy exploring emotional detachment, and social skills coaching to facilitate safe interpersonal connection.",
+                    ar: "العلاج النفسي الديناميكي لاستكشاف جذور الانفصال، والتدريب الفردي على المهارات الاجتماعية لبناء علاقات آمنة ومريحة."
+                }
+            },
+            "Aggressive": {
+                cluster: { en: "Cluster B (Dramatic / Erratic)", ar: "المجموعة ب (درامي / متقلب)" },
+                dsmContext: {
+                    en: "Characterized by a pervasive pattern of disregard for, and violation of, the rights of others (Antisocial Personality DSM-5 framework).",
+                    ar: "يتسم بنمط شامل من تجاهل وانتهاك حقوق الآخرين وخرق القواعد المجتمعية (إطار الشخصية المضادة للمجتمع)."
+                },
+                subclinical: {
+                    en: "Stellar assertiveness, absolute emotional fearlessness, decisive risk management, and charismatic strategic thinking.",
+                    ar: "حسم قوي وشجاع، جسارة وجرأة عاطفية عالية، قدرة ممتازة على إدارة المخاطر، وتفكير استراتيجي كاريزمي."
+                },
+                clinical: {
+                    en: "Chronic impulsivity, failure to conform to social norms or laws, complete lack of remorse or guilt, manipulative behavioral patterns.",
+                    ar: "اندفاعية مزمنة، خرق متكرر للقوانين والأعراف، غياب تام للمشاعر بالندم أو الذنب، وأنماط سلوكية تلاعبية مخادعة."
+                },
+                treatment: {
+                    en: "Cognitive Behavioral Therapy (CBT) focusing on impulse control, empathy development training, and anger management protocols.",
+                    ar: "العلاج السلوكي المعرفي (CBT) لضبط الاندفاعات، تدريبات تنمية التعاطف الوجداني، وبروتوكولات التحكم في الغضب."
+                }
+            }
         };
 
         // --- FULL QUESTION DATA (BILINGUAL) ---
@@ -882,35 +1075,167 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         function generateAnalysis() {
             const statsGrid = document.getElementById('stats-grid');
-            let html = '';
-
+            const dominantCard = document.getElementById('dominant-profile-card');
+            const clustersGrid = document.getElementById('clusters-grid');
+            
             const sortedKeys = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
             const dominantKey = sortedKeys[0];
             const dominantPercent = Math.round((scores[dominantKey] / 50) * 100);
-
-            const descriptions = {
-                en: "High scores in this area indicate specific personality patterns. Read more in our library.",
-                ar: "تشير الدرجات العالية في هذا المجال إلى أنماط شخصية محددة. اقرأ المزيد في مكتبتنا."
-            };
-
+            
+            let severityLabel = "";
+            let severityClass = "";
+            
+            if (dominantPercent > 75) {
+                severityLabel = currentLang === 'en' ? "High Clinical Marker" : "مؤشر سريري مرتفع";
+                severityClass = "bg-red-500/20 text-red-400 border-red-500/30";
+            } else if (dominantPercent >= 50) {
+                severityLabel = currentLang === 'en' ? "Moderate Traits" : "سمات معتدلة";
+                severityClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+            } else {
+                severityLabel = currentLang === 'en' ? "Stable / Adaptive" : "متزن / متكيف";
+                severityClass = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+            }
+            
             const domName = categoriesTrans[dominantKey][currentLang];
-            document.getElementById('dominant-trait-desc').innerHTML = `<strong>${domName} (${dominantPercent}%)</strong>: ${descriptions[currentLang]}`;
+            const profile = dsm5Profiles[dominantKey];
+            
+            dominantCard.innerHTML = `
+                <div class="glass-panel p-6 rounded-2xl border border-indigo-500/20 bg-slate-900/60 mt-4 fade-in">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold block mb-1">${profile.cluster[currentLang]}</span>
+                            <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                ${domName} 
+                                <span class="text-sm font-extrabold text-indigo-300">(${dominantPercent}%)</span>
+                            </h3>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-full text-xs font-bold border ${severityClass}">
+                            ${severityLabel}
+                        </span>
+                    </div>
+                    
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6 border-l-2 border-indigo-500 pl-3 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-3">
+                        <strong>${currentLang === 'en' ? "DSM-5 Diagnostic Profile" : "التوصيف التشخيصي (DSM-5)"}:</strong> 
+                        ${profile.dsmContext[currentLang]}
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-500/20">
+                            <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-check-circle"></i>
+                                ${currentLang === 'en' ? "Adaptive / Subclinical Strengths" : "نقاط القوة التكيفية وغير السريرية"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.subclinical[currentLang]}</p>
+                        </div>
+                        
+                        <div class="p-4 rounded-xl bg-red-950/10 border border-red-500/20">
+                            <h4 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                ${currentLang === 'en' ? "Clinical Warning Indicators (High Score)" : "المؤشرات السريرية التحذيرية (للدرجات المرتفعة)"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.clinical[currentLang]}</p>
+                        </div>
+                        
+                        <div class="p-4 rounded-xl bg-indigo-950/20 border border-indigo-500/20">
+                            <h4 class="text-sm font-bold text-indigo-300 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-heartbeat"></i>
+                                ${currentLang === 'en' ? "Evidence-Based Recommendations (DSM-5)" : "التوصيات والعلاجات المعتمدة (DSM-5)"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.treatment[currentLang]}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-xs">
+                        <span class="text-slate-400">${currentLang === 'en' ? "Source: DSM-5 Diagnostic Guidelines" : "المصدر: إرشادات التشخيص للدليل الخامس DSM-5"}</span>
+                        <a href="blog.html" class="text-indigo-400 hover:text-white font-bold transition-colors underline flex items-center gap-1">
+                            ${currentLang === 'en' ? "Read Library" : "اقرأ في المكتبة"}
+                            <i class="fas fa-arrow-right rtl:rotate-180"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
 
+            const scoreA = Math.round(((scores.Paranoid + scores.Schizoid) / 100) * 100);
+            const scoreB = Math.round(((scores.Narcissism + scores.Borderline + scores.Histrionic + scores.Aggressive) / 200) * 100);
+            const scoreC = Math.round(((scores.Compulsive + scores.Avoidant) / 100) * 100);
+            const scoreSyndromes = Math.round(((scores.Depressive + scores.Anxiety) / 100) * 100);
+
+            const clusters = [
+                {
+                    name: { en: "Cluster A (Odd / Eccentric)", ar: "المجموعة أ (غريب / ارتيابي)" },
+                    percent: scoreA,
+                    desc: { en: "Paranoid, Schizoid traits.", ar: "الصفات الارتيابية وشبه الفصامية." },
+                    color: "from-purple-500 to-indigo-500"
+                },
+                {
+                    name: { en: "Cluster B (Dramatic / Erratic)", ar: "المجموعة ب (درامي / متقلب)" },
+                    percent: scoreB,
+                    desc: { en: "Narcissistic, Borderline, Histrionic, Antisocial.", ar: "الصفات الحدية، النرجسية، الهستيرية، والعدوانية." },
+                    color: "from-pink-500 to-rose-500"
+                },
+                {
+                    name: { en: "Cluster C (Anxious / Fearful)", ar: "المجموعة ج (قلق / متخوف)" },
+                    percent: scoreC,
+                    desc: { en: "Avoidant, Obsessive-Compulsive.", ar: "الصفات التجنبية والوسواسية." },
+                    color: "from-blue-500 to-teal-500"
+                },
+                {
+                    name: { en: "Clinical & Mood Syndromes", ar: "المتلازمات المزاجية والسريرية" },
+                    percent: scoreSyndromes,
+                    desc: { en: "Depressive, Generalized Anxiety indicators.", ar: "مؤشرات الاكتئاب السريري والقلق العام." },
+                    color: "from-amber-500 to-orange-500"
+                }
+            ];
+
+            document.getElementById('cluster-analysis-title').innerText = currentLang === 'en' ? "DSM-5 Cluster Analysis" : "تحليل المجموعات التشخيصية (DSM-5)";
+
+            clustersGrid.innerHTML = clusters.map(c => `
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-slate-200">${c.name[currentLang]}</span>
+                        <span class="font-extrabold text-white">${c.percent}%</span>
+                    </div>
+                    <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                        <div class="bg-gradient-to-r ${c.color} h-full rounded-full transition-all duration-1000" style="width: ${c.percent}%"></div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 italic">${c.desc[currentLang]}</p>
+                </div>
+            `).join('');
+
+            let statsHtml = '';
             sortedKeys.forEach(key => {
                 const percent = Math.round((scores[key] / 50) * 100);
                 const name = categoriesTrans[key][currentLang];
-                let color = percent > 75 ? 'bg-red-600' : percent > 50 ? 'bg-indigo-600' : 'bg-slate-700';
+                
+                let colorClass = "";
+                let statusLabel = "";
+                
+                if (percent > 75) {
+                    colorClass = "bg-red-500";
+                    statusLabel = currentLang === 'en' ? "High" : "مرتفع";
+                } else if (percent >= 50) {
+                    colorClass = "bg-yellow-500";
+                    statusLabel = currentLang === 'en' ? "Moderate" : "معتدل";
+                } else {
+                    colorClass = "bg-emerald-500";
+                    statusLabel = currentLang === 'en' ? "Stable" : "متزن";
+                }
 
-                html += `
-                <div class="flex items-center justify-between group">
-                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
-                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full ${color}" style="width: ${percent}%"></div>
+                statsHtml += `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg border border-slate-700/30 hover:bg-slate-800/30 transition-colors group">
+                    <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-1/3">
+                        <span class="text-sm font-semibold text-slate-300 group-hover:text-white truncate">${name}</span>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${percent > 75 ? 'border-red-500/30 text-red-400 bg-red-500/10' : percent > 50 ? 'border-yellow-500/30 text-yellow-400 bg-yellow-500/10' : 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'}">${statusLabel}</span>
                     </div>
-                    <span class="text-sm font-bold text-white w-10 text-end">${percent}%</span>
+                    <div class="flex-1 flex items-center gap-3">
+                        <div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full ${colorClass} transition-all duration-1000" style="width: ${percent}%"></div>
+                        </div>
+                        <span class="text-sm font-bold text-white w-10 text-end">${percent}%</span>
+                    </div>
                 </div>`;
             });
-            statsGrid.innerHTML = html;
+            statsGrid.innerHTML = statsHtml;
         }
 
         function renderChart() {
@@ -1010,7 +1335,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         document.getElementById('nav-home').classList.add('active');
 
     </script>
-</body>
+<script src="js/ai-assistant.js"></script></body>
 
 
 </html>

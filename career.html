@@ -194,6 +194,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
                                     class="fab fa-twitter"></i> Twitter</button>
                         </div>
+                        <div id="dominant-profile-card"></div>
                     </div>
                     <div class="space-y-6">
                         <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700/50">
@@ -227,6 +228,99 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             "S": { en: "Social (Helpers)", ar: "اجتماعي (المساعدون)" },
             "E": { en: "Enterprising (Persuaders)", ar: "مقدام (المؤثرون)" },
             "C": { en: "Conventional (Organizers)", ar: "تقليدي (المنظمون)" }
+        };
+
+        const careerProfiles = {
+            "R": {
+                name: { en: "Realistic (The Doer)", ar: "واقعي (المنفذون)" },
+                strengths: {
+                    en: "Practical problem solving, mechanical and manual aptitude, working with tools, materials, and objects, hands-on physical productivity, and a preference for outdoor/field work.",
+                    ar: "حل المشكلات بشكل عملي ومادي، القدرة الميكانيكية واليدوية، التعامل مع الأدوات والآلات، والإنتاج الملموس، وتفضيل العمل الميداني."
+                },
+                weaknesses: {
+                    en: "May struggle with highly abstract conceptual tasks, dislike of rigid paperwork/administrative systems, and discomfort with complex office politics.",
+                    ar: "قد يواجه صعوبة في المهام التجريدية أو النظرية البحتة، كراهية للأعمال الورقية الروتينية، وعدم الارتياح للسياسات المكتبية المعقدة."
+                },
+                advice: {
+                    en: "Seek roles in mechanical/electrical engineering, agriculture, technical trades, logistics, or physical therapy. Pair with strategic thinkers to complement your practical execution.",
+                    ar: "ابحث عن مجالات مثل الهندسة التطبيقية، الزراعة الحديثة، الحرف والتقنيات اليدوية، أو الإمداد والخدمات اللوجستية. شارك مع مفكرين تحليليين."
+                }
+            },
+            "I": {
+                name: { en: "Investigative (The Thinker)", ar: "استقصائي (المفكرون)" },
+                strengths: {
+                    en: "Analytical observation, scientific inquiry, logical problem-solving, intellectual curiosity, research proficiency, and data evaluation.",
+                    ar: "الملاحظة التحليلية الدقيقة، البحث العلمي والتقصي، حل المشكلات بطريقة منطقية، الفضول الفكري العالي، وتصميم وتقييم البيانات."
+                },
+                weaknesses: {
+                    en: "Risk of overthinking or analysis paralysis, impatience with purely emotional decisions, and a tendency to withdraw from collaborative teamwork.",
+                    ar: "خطر المبالغة في التحليل (شلل التحليل)، نفاد الصبر مع القرارات القائمة على العواطف فقط، والميل للانعزال عن العمل الجماعي الاجتماعي."
+                },
+                advice: {
+                    en: "Target careers in scientific research, software development, data science, academic research, medical field, or clinical diagnostics. Focus on interpersonal soft skills.",
+                    ar: "استهدف مجالات البحث العلمي، تطوير البرمجيات، علم البيانات، الدراسات الأكاديمية، أو التشخيص الطبي. نمِّ مهارات التواصل الاجتماعي."
+                }
+            },
+            "A": {
+                name: { en: "Artistic (The Creator)", ar: "فني (المبدعون)" },
+                strengths: {
+                    en: "Creative self-expression, high aesthetic appreciation, original out-of-the-box thinking, emotional depth, and high cognitive flexibility and adaptability.",
+                    ar: "التعبير الإبداعي الفريد، تقدير فني وجمالي متطور، التفكير خارج الصندوق، العمق العاطفي، والمرونة العالية والتكيف السريع."
+                },
+                weaknesses: {
+                    en: "Difficulty conforming to strict, repetitive schedules, aversion to routine operations, and vulnerability to self-doubt or emotional fluctuations.",
+                    ar: "صعوبة الالتزام بالجداول الزمنية الصارمة، النفور الشديد من الإجراءات الروتينية الجافة، وعرضة للتقلبات المزاجية والشك في الذات."
+                },
+                advice: {
+                    en: "Pursue occupations in graphic design, content creation, copywriting, advertising, architecture, or writing. Establish basic daily organizational habits.",
+                    ar: "ابحث عن مهن في التصميم (بجميع أنواعه)، صناعة المحتوى، الفنون التعبيرية، الدعاية والإعلان، أو الهندسة المعمارية. ابنِ عادات تنظيمية بسيطة."
+                }
+            },
+            "S": {
+                name: { en: "Social (The Helper)", ar: "اجتماعي (المساعدون)" },
+                strengths: {
+                    en: "Profound empathy, excellent interpersonal communication, teaching and coaching abilities, conflict resolution, and a highly collaborative team spirit.",
+                    ar: "التعاطف القوي مع الآخرين، مهارات التواصل الاجتماعي الممتازة، القدرة على التعليم والتدريب، حل النزاعات، والروح التعاونية العالية."
+                },
+                weaknesses: {
+                    en: "Risk of emotional exhaustion, taking others' problems personally, and neglecting self-care and professional boundaries.",
+                    ar: "خطر الاحتراق النفسي والإجهاد العاطفي، حمل مشاكل الآخرين للمنزل، وإهمال الرعاية الذاتية والحدود الشخصية في العمل."
+                },
+                advice: {
+                    en: "Ideal fields include education, mental health counseling, HR, social work, or community leadership. Establish clear boundaries to prevent burnout.",
+                    ar: "المجالات المثالية تشمل التعليم، الإرشاد النفسي، الرعاية الصحية، الموارد البشرية، أو التنمية المجتمعية. ارسم حدوداً صارمة لحماية نفسك."
+                }
+            },
+            "E": {
+                name: { en: "Enterprising (The Persuader)", ar: "مقدام (المؤثرون)" },
+                strengths: {
+                    en: "Persuasive communication, natural leadership initiative, entrepreneurial drive, high energy, goal-orientation, and professional self-confidence.",
+                    ar: "التواصل الإقناعي المؤثر، المبادرة والقيادة، الفكر الريادي والمشاريع، طاقة وحيوية عالية، التوجه نحو الأهداف، والثقة بالنفس."
+                },
+                weaknesses: {
+                    en: "May become impatient with detailed technical execution, prone to risky decision-making, and a tendency to dominate group dynamics.",
+                    ar: "قد ينفد صبره مع التفاصيل التقنية الدقيقة للتنفيذ، الميل للمخاطرة المفرطة، ورغبة في الهيمنة على الحوارات وإدارة الأمور."
+                },
+                advice: {
+                    en: "Look for roles in sales leadership, business development, entrepreneurship, marketing management, public relations, or consulting. Practice active listening.",
+                    ar: "ابحث عن فرص في قيادة المبيعات، تطوير الأعمال، ريادة الأعمال، إدارة التسويق، أو العلاقات العامة والسياسة. تدرب على الاستماع."
+                }
+            },
+            "C": {
+                name: { en: "Conventional (The Organizer)", ar: "تقليدي (المنظمون)" },
+                strengths: {
+                    en: "Exceptional accuracy and precision, structured data management, regulatory compliance, operational quality control, and outstanding organizational skills.",
+                    ar: "الدقة المتناهية، الإدارة المنظمة للبيانات، الامتثال للوائح والقوانين، مراقبة الجودة، المحاسبة، والمهارات التنظيمية العالية جداً."
+                },
+                weaknesses: {
+                    en: "Aversion to ambiguity or unstructured tasks, resistance to sudden changes, and difficulty designing completely novel, unproven solutions.",
+                    ar: "النفور من الغموض أو عدم الوضوح، مقاومة التغيرات المفاجئة، وصعوبة ابتكار حلول جديدة تماماً غير مجربة سابقاً."
+                },
+                advice: {
+                    en: "Excellent fit for finance, data administration, compliance auditing, operational coordination, or project planning. Practice welcoming open, creative experimentation.",
+                    ar: "تناسبك تماماً مجالات المالية، إدارة البيانات، تدقيق الامتثال، التنسيق التشغيلي، أو تخطيط المشاريع. تدرب على تقبل التجريب المرن."
+                }
+            }
         };
 
         // 60 Qs usually for RIASEC (10 each). We will do ~8-9 per category to hit ~50-something. 
@@ -418,18 +512,102 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
             });
 
+            // Find dominant career interest code
+            const keys = Object.keys(scores);
+            const sortedKeys = [...keys].sort((a, b) => scores[b] - scores[a]);
+            const dominantKey = sortedKeys[0];
+            const dominantPercent = Math.round((scores[dominantKey] / 40) * 100);
+
+            const profile = careerProfiles[dominantKey];
+            const dominantCard = document.getElementById('dominant-profile-card');
+
+            let severityLabel = "";
+            let severityClass = "";
+            if (dominantPercent > 75) {
+                severityLabel = currentLang === 'en' ? "Core Interest / Primary" : "ميول مهنية أساسية وطاغية";
+                severityClass = "bg-orange-500/20 text-orange-400 border-orange-500/30";
+            } else if (dominantPercent >= 45) {
+                severityLabel = currentLang === 'en' ? "Strong Affinity" : "ميول قوية معتدلة";
+                severityClass = "bg-amber-500/20 text-amber-400 border-amber-500/30";
+            } else {
+                severityLabel = currentLang === 'en' ? "Latent Interest" : "اهتمام خفيف أو كامن";
+                severityClass = "bg-slate-500/20 text-slate-400 border-slate-500/30";
+            }
+
+            dominantCard.innerHTML = `
+                <div class="glass-panel p-6 rounded-2xl border border-orange-500/20 bg-slate-900/60 mt-6 fade-in text-start">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-orange-400 font-bold block mb-1">
+                                ${currentLang === 'en' ? "RIASEC Career Orientation" : "التوجيه المهني حسب مقياس RIASEC"}
+                            </span>
+                            <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                ${profile.name[currentLang]} 
+                                <span class="text-sm font-extrabold text-orange-300">(${dominantPercent}%)</span>
+                            </h3>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-full text-xs font-bold border ${severityClass}">
+                            ${severityLabel}
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-500/20">
+                            <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-gem"></i>
+                                ${currentLang === 'en' ? "Professional Strengths & Talents" : "الميزات الكبرى ونقاط التميز المهني"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.strengths[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-red-950/10 border border-red-500/20">
+                            <h4 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-shield-alt"></i>
+                                ${currentLang === 'en' ? "Occupational Blindspots & Challenges" : "المخاطر والمناطق العمياء في بيئة العمل"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.weaknesses[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-orange-950/20 border border-orange-500/20">
+                            <h4 class="text-sm font-bold text-orange-300 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-lightbulb"></i>
+                                ${currentLang === 'en' ? "Career Path Recommendations" : "نصائح التوجيه والارتقاء المهني"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.advice[currentLang]}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             const statsGrid = document.getElementById('stats-grid');
-            statsGrid.innerHTML = Object.keys(scores).map(k => {
+            statsGrid.innerHTML = keys.map(k => {
                 const pct = Math.round((scores[k] / 40) * 100);
                 const name = categoriesTrans[k][currentLang];
+                let badgeClass = "";
+                let statusText = "";
+                if (pct > 75) {
+                    badgeClass = "border-orange-500/30 text-orange-400 bg-orange-500/10";
+                    statusText = currentLang === 'en' ? "Core Interest" : "شغف أساسي";
+                } else if (pct >= 45) {
+                    badgeClass = "border-amber-500/30 text-amber-400 bg-amber-500/10";
+                    statusText = currentLang === 'en' ? "Strong Affinity" : "ميول قوية";
+                } else {
+                    badgeClass = "border-slate-500/30 text-slate-400 bg-slate-500/10";
+                    statusText = currentLang === 'en' ? "Latent Interest" : "ميول كامنة";
+                }
                 return `
-                 <div class="flex items-center justify-between group">
-                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
-                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full bg-orange-500" style="width: ${pct}%"></div>
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg border border-slate-700/30 hover:bg-slate-800/30 transition-all duration-300 group text-start">
+                    <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-1/2">
+                        <span class="text-sm font-semibold text-slate-300 group-hover:text-white truncate">${name}</span>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${badgeClass}">${statusText}</span>
                     </div>
-                    <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
-                </div>
+                    <div class="flex-1 flex items-center gap-3 w-full">
+                        <div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-orange-500 transition-all duration-1000" style="width: ${pct}%"></div>
+                        </div>
+                        <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                    </div>
+                 </div>
                 `;
             }).join('');
         }
@@ -452,7 +630,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         init();
     </script>
-</body>
+<script src="js/ai-assistant.js"></script></body>
 
 
 </html>

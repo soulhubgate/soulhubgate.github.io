@@ -179,19 +179,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             <div id="page-result" class="hidden fade-in w-full">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                    <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
-                        <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                            <i class="fas fa-chart-pie text-yellow-400"></i> Your EQ Profile
-                        </h2>
-                        <canvas id="radarChart" class="w-full max-h-[400px]"></canvas>
-                        <div class="mt-6 flex gap-4">
-                            <button onclick="shareResult('wa')"
-                                class="flex-1 py-3 bg-green-600 hover:bg-green-500 rounded-xl text-white font-bold transition-all"><i
-                                    class="fab fa-whatsapp"></i> WhatsApp</button>
-                            <button onclick="shareResult('tw')"
-                                class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
-                                    class="fab fa-twitter"></i> Twitter</button>
+                    <div class="space-y-6">
+                        <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+                            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                                <i class="fas fa-chart-pie text-yellow-400"></i> Your EQ Profile
+                            </h2>
+                            <canvas id="radarChart" class="w-full max-h-[400px]"></canvas>
+                            <div class="mt-6 flex gap-4">
+                                <button onclick="shareResult('wa')"
+                                    class="flex-1 py-3 bg-green-600 hover:bg-green-500 rounded-xl text-white font-bold transition-all"><i
+                                        class="fab fa-whatsapp"></i> WhatsApp</button>
+                                <button onclick="shareResult('tw')"
+                                    class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
+                                        class="fab fa-twitter"></i> Twitter</button>
+                            </div>
                         </div>
+
+                        <div id="dominant-profile-card"></div>
                     </div>
                     <div class="space-y-6">
                         <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700/50">
@@ -225,7 +229,85 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             "SS": { en: "Social Skills", ar: "المهارات الاجتماعية" }
         };
 
-        // 50 Questions (10 per domain) - abbreviated list for template, actually expanded in full implementation
+        const eqProfiles = {
+            "SA": {
+                name: { en: "Self-Awareness Superpower", ar: "قوة الوعي الذاتي الاستثنائية" },
+                strengths: {
+                    en: "Exceptional clarity regarding personal emotional states, behavioral triggers, physiological stress responses, and core values.",
+                    ar: "وضوح استثنائي وفهم عميق للحالات المزاجية الشخصية، محفزات السلوك، الاستجابات الجسدية للتوتر، والقيم والمبادئ الأساسية."
+                },
+                weaknesses: {
+                    en: "Risk of over-analyzing emotional fluctuations, leading to emotional rumination or intellectualizing feelings.",
+                    ar: "خطر المبالغة في تحليل التقلبات العاطفية، مما قد يؤدي إلى الاجترار العاطفي أو عقلنة المشاعر بدلاً من عيشها."
+                },
+                advice: {
+                    en: "Translate emotional insights into deliberate action. Practice somatic grounding, and avoid dwelling on negative emotions.",
+                    ar: "ترجم رؤاك العاطفية إلى أفعال وقرارات ملموسة. مارس التمكين الجسدي، وتجنب الانشغال المفرط بالمشاعر السلبية."
+                }
+            },
+            "SR": {
+                name: { en: "Self-Regulation Superpower", ar: "قوة التنظيم الذاتي الاستثنائية" },
+                strengths: {
+                    en: "Outstanding impulse control, resilience under high stress, emotional adaptability, and highly thoughtful reaction selection.",
+                    ar: "قدرة ممتازة على ضبط الانفعالات، المرونة العالية تحت الضغط، التكيف العاطفي، واختيار ردود الأفعال بعقلانية وتأمل."
+                },
+                weaknesses: {
+                    en: "May lead to hyper-control or suppression of authentic emotions, appearing overly stoic, cold, or detached.",
+                    ar: "قد يؤدي إلى التحكم المفرط أو قمع المشاعر الحقيقية، مما يجعلك تبدو غير مبالٍ، بارداً، أو منفصلاً عاطفياً."
+                },
+                advice: {
+                    en: "Allow yourself to express authentic vulnerability in safe spaces. Practice mindfulness-based emotional release exercises.",
+                    ar: "اسمح لنفسك بالتعبير عن نقاط ضعفك الإنسانية في مساحات آمنة. تدرب على تمارين التنفيس العاطفي الواعي."
+                }
+            },
+            "MO": {
+                name: { en: "Intrinsic Motivation Superpower", ar: "قوة الدافع الذاتي الاستثنائية" },
+                strengths: {
+                    en: "Intense drive for self-actualization, deep goal commitment, optimism during setbacks, and highly proactive career/life initiative.",
+                    ar: "شغف ودافع عميق لتحقيق الذات، التزام راسخ بالأهداف، التفاؤل الصلب عند مواجهة العقبات، والقدرة العالية على المبادرة."
+                },
+                weaknesses: {
+                    en: "Prone to workaholism, setting impossibly high expectations for self/others, and potential executive burnout.",
+                    ar: "النزوع نحو إدمان العمل، وضع توقعات ومعايير شبه مستحيلة للنفس وللآخرين، وخطر التعرض للاحتراق المهني."
+                },
+                advice: {
+                    en: "Learn to celebrate micro-wins and the journey itself. Engage in restful hobbies that carry no performance goals.",
+                    ar: "تعلم الاحتفاء بالانتصارات الصغيرة والمشوار نفسه. مارس هوايات مريحة وخالية تماماً من أي معايير أو أهداف للأداء."
+                }
+            },
+            "EM": {
+                name: { en: "Deep Empathy Superpower", ar: "قوة التعاطف الإنساني الاستثنائية" },
+                strengths: {
+                    en: "Stellar capacity to read non-verbal cues, sense others' emotional states, validate feelings, and build deep psychological safety.",
+                    ar: "قدرة فائقة على قراءة لغة الجسد والإشارات غير اللفظية، استشعار الحالات النفسية للآخرين، وتوفير الأمان النفسي العميق."
+                },
+                weaknesses: {
+                    en: "High vulnerability to absorbing secondary trauma, emotional sponge syndrome, and neglecting own needs.",
+                    ar: "حساسية مفرطة لامتصاص الضغوط وصدمات الآخرين (الاسفنجة العاطفية)، وإهمال الاحتياجات الشخصية على حساب الغير."
+                },
+                advice: {
+                    en: "Establish healthy energetic boundaries. Practice the 'de-sponging' visualization and dedicate regular self-care time.",
+                    ar: "ضع حدوداً طاقية ونفسية صحية. مارس تمارين فك الارتباط الوجداني وخصص وقتاً ثابتاً للرعاية الذاتية الشخصية."
+                }
+            },
+            "SS": {
+                name: { en: "Social Skills & Rapport Superpower", ar: "قوة المهارات الاجتماعية الاستثنائية" },
+                strengths: {
+                    en: "Mastery of conflict resolution, persuasive communication, building collaborative rapport, and inspiring leadership.",
+                    ar: "البراعة الفائقة في حل النزاعات والتسويات، التواصل المقنع والمؤثر، بناء العلاقات التعاونية، والقيادة الملهمة."
+                },
+                weaknesses: {
+                    en: "Risk of people-pleasing, manipulating social dynamics, or hiding own feelings to keep superficial peace.",
+                    ar: "خطر السقوط في فخ إرضاء الجميع على حساب الذات، تلاعب خفي بالديناميكيات الاجتماعية، وكتم المشاعر لحفظ السلام."
+                },
+                advice: {
+                    en: "Practice authentic assertion even if it creates friction, and focus on depth rather than breadth in relationships.",
+                    ar: "تدرب على الحسم والمصارحة الصادقة حتى لو تسببت في بعض الاختلاف، وركز على عمق العلاقات بدلاً من كثرتها."
+                }
+            }
+        };
+
+        // 50 Questions (10 per domain)
         const questions = [
             // Self-Awareness
             { category: "SA", text: { en: "I can name my emotions as I feel them.", ar: "أستطيع تسمية مشاعري لحظة شعوري بها." } },
@@ -411,17 +493,103 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
             });
 
+            // Find Dominant EQ Superpower
+            const sortedKeys = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+            const dominantKey = sortedKeys[0];
+            const dominantPercent = Math.round((scores[dominantKey] / 50) * 100);
+
+            const profile = eqProfiles[dominantKey];
+            const dominantCard = document.getElementById('dominant-profile-card');
+
+            let severityLabel = "";
+            let severityClass = "";
+            if (dominantPercent > 75) {
+                severityLabel = currentLang === 'en' ? "Exceptional Mastery" : "براعة عاطفية استثنائية";
+                severityClass = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+            } else if (dominantPercent >= 50) {
+                severityLabel = currentLang === 'en' ? "Optimal Capability" : "قدرة عاطفية متوازنة";
+                severityClass = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+            } else {
+                severityLabel = currentLang === 'en' ? "Developing Stage" : "مرحلة التطوير العاطفي";
+                severityClass = "bg-red-500/20 text-red-400 border-red-500/30";
+            }
+
+            dominantCard.innerHTML = `
+                <div class="glass-panel p-6 rounded-2xl border border-yellow-500/20 bg-slate-900/60 mt-4 fade-in text-start">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-yellow-400 font-bold block mb-1">
+                                ${currentLang === 'en' ? "Emotional Superpower Archetype" : "نمط القوة العاطفية السائدة"}
+                            </span>
+                            <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                ${profile.name[currentLang]} 
+                                <span class="text-sm font-extrabold text-yellow-300">(${dominantPercent}%)</span>
+                            </h3>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-full text-xs font-bold border ${severityClass}">
+                            ${severityLabel}
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-500/20">
+                            <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-check-circle"></i>
+                                ${currentLang === 'en' ? "Adaptive Strengths & Capabilities" : "نقاط القوة التكيفية والمهارات الذاتية"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.strengths[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-red-950/10 border border-red-500/20">
+                            <h4 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                ${currentLang === 'en' ? "Dynamic Pitfalls & Potential Growth Risks" : "العقبات المحتملة ومخاطر السلوك"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.weaknesses[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-yellow-950/20 border border-yellow-500/20">
+                            <h4 class="text-sm font-bold text-yellow-300 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-magic"></i>
+                                ${currentLang === 'en' ? "Actionable EQ Exercises & Coaching Path" : "تمارين عملية لرفع الذكاء العاطفي"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.advice[currentLang]}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             const statsGrid = document.getElementById('stats-grid');
             statsGrid.innerHTML = Object.keys(scores).map(k => {
                 const pct = Math.round((scores[k] / 50) * 100);
                 const name = categoriesTrans[k][currentLang];
+                
+                let badgeClass = "";
+                let statusText = "";
+                
+                if (pct > 75) {
+                    badgeClass = "border-emerald-500/30 text-emerald-400 bg-emerald-500/10";
+                    statusText = currentLang === 'en' ? "Exceptional" : "استثنائي";
+                } else if (pct >= 50) {
+                    badgeClass = "border-yellow-500/30 text-yellow-400 bg-yellow-500/10";
+                    statusText = currentLang === 'en' ? "Optimal" : "مثالي";
+                } else {
+                    badgeClass = "border-red-500/30 text-red-400 bg-red-500/10";
+                    statusText = currentLang === 'en' ? "Developing" : "نامي";
+                }
+
                 return `
-                 <div class="flex items-center justify-between group">
-                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
-                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full bg-yellow-500" style="width: ${pct}%"></div>
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg border border-slate-700/30 hover:bg-slate-800/30 transition-all duration-300 group text-start">
+                    <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-1/3">
+                        <span class="text-sm font-semibold text-slate-300 group-hover:text-white truncate">${name}</span>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${badgeClass}">${statusText}</span>
                     </div>
-                    <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                    <div class="flex-1 flex items-center gap-3 w-full">
+                        <div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-yellow-500 transition-all duration-1000" style="width: ${pct}%"></div>
+                        </div>
+                        <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                    </div>
                 </div>
                 `;
             }).join('');
@@ -445,8 +613,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         init();
     </script>
-</body>
-
-
+<script src="js/ai-assistant.js"></script></body>
 </html>
 

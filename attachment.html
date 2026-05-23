@@ -172,6 +172,7 @@
                                 class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
                                     class="fab fa-twitter"></i> Twitter</button>
                         </div>
+                        <div id="dominant-profile-card"></div>
                     </div>
                     <div class="space-y-6">
                         <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700/50">
@@ -207,6 +208,54 @@
             "SEC": { en: "Secure", ar: "آمن" },
             "ANX": { en: "Anxiety", ar: "قلق" },
             "AVO": { en: "Avoidance", ar: "تجنب" }
+        };
+
+        const attachmentProfiles = {
+            "SEC": {
+                name: { en: "Secure Attachment Style", ar: "نمط التعلق الآمن (المتزن)" },
+                strengths: {
+                    en: "Comfortable with intimacy and emotional closeness, trusts easily, communicates relationship needs directly, handles interpersonal conflicts constructively, and maintains a healthy balance between intimacy and independence.",
+                    ar: "الارتياح للحميمية والقرب العاطفي، بناء الثقة بالآخرين بسهولة، التعبير الصريح عن الاحتياجات، حل النزاعات بشكل بناء، والحفاظ على الاستقلالية الصحية."
+                },
+                weaknesses: {
+                    en: "Can occasionally remain too long in dysfunctional environments due to an overly optimistic belief in relational growth and the capacity to 'fix' things.",
+                    ar: "قد يستمر أحياناً لفترة أطول من اللازم في بيئات عاطفية مضطربة محاولاً إصلاحها بسبب تفاؤله المفرط بالقدرة على التغيير العاطفي البناء."
+                },
+                advice: {
+                    en: "Continue establishing healthy, clear boundaries. Ensure your relational optimism is aligned with objective reality, and continue modeling warm, open communication.",
+                    ar: "استمر في رسم حدود صحية وواضحة. وازن بين تفاؤلك العاطفي والواقع الفعلي للشريك، وحافظ على أسلوب التواصل المفتوح والدافئ مع المحيطين بك."
+                }
+            },
+            "ANX": {
+                name: { en: "Anxious-Preoccupied Attachment Style", ar: "نمط التعلق القلق والشاغل" },
+                strengths: {
+                    en: "Highly attuned to emotional dynamics, deeply empathetic, highly valuing human connection, and a passionate, devoted, and supportive partner.",
+                    ar: "حساسية عالية للديناميكيات العاطفية وتغيراتها، تعاطف وجداني عميق، تقدير كبير للروابط الإنسانية، والتفاني والإخلاص المطلق للشريك."
+                },
+                weaknesses: {
+                    en: "Hypersensitivity to perceived rejection or abandonment, constant need for reassurance, tendency to overanalyze behavior, and susceptibility to relationship anxiety.",
+                    ar: "الحساسية المفرطة لأي رفض متخيل، الحاجة الدائمة للتطمين والتوثيق، المبالغة في تحليل تصرفات الشريك، وخوف مزمن من الهجر."
+                },
+                advice: {
+                    en: "Practice emotional self-soothing techniques to manage relationship anxiety. Communicate fears directly using objective 'I' statements, and avoid silent-protest behaviors.",
+                    ar: "تدرب على مهارات التهدئة الذاتية وتخفيف التوتر بمفردك. عبر عن مخاوفك للشريك مباشرة بصيغة 'أنا أشعر...' وتجنب السلوكيات الاحتجاجية الجافة."
+                }
+            },
+            "AVO": {
+                name: { en: "Avoidant-Dismissive Attachment Style", ar: "نمط التعلق التجنبي الرافض" },
+                strengths: {
+                    en: "Strong self-reliance, outstanding capability to handle life tasks independently, exceptional level-headedness in emotional crises, and comfortable with solitude.",
+                    ar: "الاعتماد الكامل على الذات، القدرة الفائقة على إنجاز الأمور بشكل مستقل، الهدوء ورجاحة العقل في الأزمات، والارتياح للعزلة والخصوصية."
+                },
+                weaknesses: {
+                    en: "Fear of vulnerability, keeping partners at an emotional distance, suppressing emotional expression, and viewing intimacy as a threat to personal freedom.",
+                    ar: "الخوف من إظهار الضعف أو الانفتاح، إبقاء الشركاء على مسافة أمان عاطفية، كبت المشاعر، ورؤية الحميمية كتهديد للحرية الشخصية."
+                },
+                advice: {
+                    en: "Try taking small, conscious steps towards emotional vulnerability. Reframe mutual dependency as a strength, and state your need for space without shutting down.",
+                    ar: "جرب اتخاذ خطوات صغيرة واعية نحو إظهار مشاعرك للشريك. تذكر أن الاعتماد المتبادل قوة وليس ضعفاً، واطلب مساحتك الخاصة بوضوح دون جفاء."
+                }
+            }
         };
 
         // We will measure Anxiety and Avoidance mainly.
@@ -373,7 +422,6 @@
             // SEC has 10 items (max 50) -> norm to 100 is *2
             // ANX has 20 items (max 100) -> norm to 100 is *1
             // AVO has 20 items (max 100) -> norm to 100 is *1
-
             const data = [
                 (scores.SEC / 50) * 100,
                 (scores.ANX / 100) * 100, // ANX is 20 items
@@ -409,16 +457,106 @@
                 }
             });
 
-            const statsGrid = document.getElementById('stats-grid');
-            statsGrid.innerHTML = labels.map((name, i) => {
-                const pct = Math.round(data[i]);
-                return `
-                 <div class="flex items-center justify-between group">
-                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
-                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full bg-red-500" style="width: ${pct}%"></div>
+            // Calculate dominant attachment style
+            const keys = ["SEC", "ANX", "AVO"];
+            const normalizedScores = {
+                SEC: (scores.SEC / 50) * 100,
+                ANX: (scores.ANX / 100) * 100,
+                AVO: (scores.AVO / 100) * 100
+            };
+            const sortedKeys = [...keys].sort((a, b) => normalizedScores[b] - normalizedScores[a]);
+            const dominantKey = sortedKeys[0];
+            const dominantPercent = Math.round(normalizedScores[dominantKey]);
+
+            const profile = attachmentProfiles[dominantKey];
+            const dominantCard = document.getElementById('dominant-profile-card');
+
+            let severityLabel = "";
+            let severityClass = "";
+            if (dominantPercent > 70) {
+                severityLabel = currentLang === 'en' ? "Dominant Style" : "نمط التعلق السائد";
+                severityClass = "bg-rose-500/20 text-rose-400 border-rose-500/30";
+            } else if (dominantPercent >= 40) {
+                severityLabel = currentLang === 'en' ? "Significant Style" : "نمط تعلق ملحوظ";
+                severityClass = "bg-amber-500/20 text-amber-400 border-amber-500/30";
+            } else {
+                severityLabel = currentLang === 'en' ? "Mild Style" : "تفضيل خفيف أو كامن";
+                severityClass = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+            }
+
+            dominantCard.innerHTML = `
+                <div class="glass-panel p-6 rounded-2xl border border-red-500/20 bg-slate-900/60 mt-6 fade-in text-start">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-red-400 font-bold block mb-1">
+                                ${currentLang === 'en' ? "Relational Bond Analysis" : "تحليل نمط الارتباط العاطفي"}
+                            </span>
+                            <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                ${profile.name[currentLang]} 
+                                <span class="text-sm font-extrabold text-red-300">(${dominantPercent}%)</span>
+                            </h3>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-full text-xs font-bold border ${severityClass}">
+                            ${severityLabel}
+                        </span>
                     </div>
-                    <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-500/20">
+                            <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-gem"></i>
+                                ${currentLang === 'en' ? "Bonding Strengths & Coping" : "نقاط القوة التكيفية في الارتباط"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.strengths[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-red-950/10 border border-red-500/20">
+                            <h4 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-shield-alt"></i>
+                                ${currentLang === 'en' ? "Relational Pitfalls & Triggers" : "المناطق الحساسة والمخاطر السلوكية"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.weaknesses[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-blue-950/20 border border-blue-500/20">
+                            <h4 class="text-sm font-bold text-blue-300 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-lightbulb"></i>
+                                ${currentLang === 'en' ? "Coaching Advice & Communication Plan" : "نصائح وإرشادات التهدئة والارتقاء"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.advice[currentLang]}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = keys.map(k => {
+                const pct = Math.round(normalizedScores[k]);
+                const name = categoriesTrans[k][currentLang];
+                let badgeClass = "";
+                let statusText = "";
+                if (pct > 70) {
+                    badgeClass = "border-rose-500/30 text-rose-400 bg-rose-500/10";
+                    statusText = currentLang === 'en' ? "Dominant" : "سائد";
+                } else if (pct >= 40) {
+                    badgeClass = "border-amber-500/30 text-amber-400 bg-amber-500/10";
+                    statusText = currentLang === 'en' ? "Significant" : "ملحوظ";
+                } else {
+                    badgeClass = "border-emerald-500/30 text-emerald-400 bg-emerald-500/10";
+                    statusText = currentLang === 'en' ? "Mild" : "خفيف";
+                }
+                return `
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg border border-slate-700/30 hover:bg-slate-800/30 transition-all duration-300 group text-start">
+                    <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-1/2">
+                        <span class="text-sm font-semibold text-slate-300 group-hover:text-white truncate">${name}</span>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${badgeClass}">${statusText}</span>
+                    </div>
+                    <div class="flex-1 flex items-center gap-3 w-full">
+                        <div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-red-500 transition-all duration-1000" style="width: ${pct}%"></div>
+                        </div>
+                        <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                    </div>
                 </div>
                 `;
             }).join('');
@@ -442,6 +580,6 @@
 
         init();
     </script>
-</body>
+<script src="js/ai-assistant.js"></script></body>
 
 </html>

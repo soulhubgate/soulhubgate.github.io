@@ -192,6 +192,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
                                     class="fab fa-twitter"></i> Twitter</button>
                         </div>
+                        <div id="dominant-profile-card"></div>
                     </div>
                     <div class="space-y-6">
                         <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700/50">
@@ -199,10 +200,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             <div id="stats-grid" class="space-y-4"></div>
                         </div>
                         <div class="flex flex-col gap-4">
-                            <div class="bg-pink-900/20 border border-pink-500/30 p-4 rounded-xl text-pink-200 text-sm">
-                                <i class="fas fa-info-circle mr-2"></i>
-                                <span id="dominant-msg">Your primary language is...</span>
-                            </div>
                             <a href="blog.html"
                                 class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-indigo-500/20 transition-all">Read
                                 Full Guide in Library</a>
@@ -228,6 +225,84 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             "Gifts": { en: "Receiving Gifts", ar: "تلقي الهدايا" },
             "Time": { en: "Quality Time", ar: "الوقت النوعي" },
             "Touch": { en: "Physical Touch", ar: "الاتصال الجسدي" }
+        };
+
+        const loveProfiles = {
+            "Words": {
+                name: { en: "Words of Affirmation (Affectionate Affirmation)", ar: "كلمات التقدير (التعبير اللفظي والدعم)" },
+                strengths: {
+                    en: "Deeply values verbal appreciation, supportive validation, meaningful letters, and hearing genuine expressions of love, care, and gratitude.",
+                    ar: "تقدير الكلمات اللفظية العذبة، الدعم والتشجيع بالكلام، الرسائل المليئة بالمشاعر، وسماع عبارات الحب الصادقة والمحددة."
+                },
+                weaknesses: {
+                    en: "Hypersensitive to harsh tones, verbal criticism, sarcastic comments, or prolonged cold silence from loved ones.",
+                    ar: "الحساسية المفرطة للنبرات الحادة والجافة، النقد الجارح، التعليقات الساخرة، أو الصمت البارد الطويل من الشريك."
+                },
+                advice: {
+                    en: "Practice sending spontaneous, positive text messages. Share specific details of what you admire about your partner, and keep verbal encouragement consistent.",
+                    ar: "أرسل رسائل حب عفوية خلال اليوم. اذكر تفاصيل محددة تعجبك في شريكك، وحافظ على التشجيع اللفظي والدعم المستمر."
+                }
+            },
+            "Acts": {
+                name: { en: "Acts of Service (Practical Devotion)", ar: "أعمال الخدمة (التفاني العملي والمساندة)" },
+                strengths: {
+                    en: "Values action over empty promises, cherishes helpful gestures, appreciates running errands, and feels loved when a partner lightens their daily burdens.",
+                    ar: "تقدير الأفعال أكثر من الوعود اللفظية، المساندة في المهام اليومية، وتخفيف الأعباء العملية كدليل قوي على الحب والاهتمام."
+                },
+                weaknesses: {
+                    en: "Strongly repulsed by laziness, broken promises to assist, lack of involvement, or feeling that chores are unevenly distributed.",
+                    ar: "النفور التام من الكسل، إخلاف الوعود بالمساندة، عدم المبادرة، والشعور بأن المسؤوليات ملقاة على عاتقهم وحدهم."
+                },
+                advice: {
+                    en: "Proactively ask 'How can I help you today?' Perform helpful tasks without being prompted, and focus on practical support during stressful times.",
+                    ar: "بادر بسؤال شريكك 'كيف يمكنني مساعدتك اليوم؟'. أنجز مهاماً مفيدة دون طلب مسبق، وقدم الدعم العملي في فترات الضغط."
+                }
+            },
+            "Gifts": {
+                name: { en: "Receiving Gifts (Tangible Thoughtfulness)", ar: "تلقي الهدايا (الاهتمام الملموس والرموز)" },
+                strengths: {
+                    en: "Sees gifts as tangible symbols of love and thoughtfulness, remembers every token of appreciation, and values the creative effort behind a gesture.",
+                    ar: "رؤية الهدايا كرموز ملموسة للحب والاهتمام، تذكر كل تذكار صغير بامتنان، وتقدير الجهد الإبداعي المبذول وراء الفكرة."
+                },
+                weaknesses: {
+                    en: "Hurt by forgotten anniversaries/birthdays, thoughtless or generic last-minute purchases, or complete absence of meaningful tokens on milestones.",
+                    ar: "الشعور بالجرح عند نسيان التواريخ المميزة كأعياد الميلاد، أو تقديم هدايا عشوائية خالية من الاهتمام والجهد في التفكير."
+                },
+                advice: {
+                    en: "Keep a private list of things your partner mentions liking throughout the year. Focus on the sentimental value and thoughtfulness of a gift rather than its price tag.",
+                    ar: "احتفظ بقائمة سرية للأشياء التي يذكر شريكك أنه يحبها طوال العام. ركز على القيمة المعنوية والرمزية للهدية بدلاً من سعرها."
+                }
+            },
+            "Time": {
+                name: { en: "Quality Time (Undivided Connection)", ar: "الوقت النوعي (الحضور الكامل والتواصل الحقيقي)" },
+                strengths: {
+                    en: "Craves undivided attention, values deep face-to-face conversations, appreciates shared new experiences, and feels connected through focused presence.",
+                    ar: "الرغبة في الانتباه الكامل والتركيز، تقدير الحوارات العميقة وجهاً وجهاً، المشاركة في تجارب جديدة، والتواصل الوجداني عبر الحضور التام."
+                },
+                weaknesses: {
+                    en: "Deeply frustrated by distractions (phones, TV) during one-on-one time, postponed or canceled dates, or lack of active listening.",
+                    ar: "الانزعاج الشديد من المشتتات كالهواتف أثناء الوقت المشترك، تأجيل أو إلغاء المواعيد، وغياب الإنصات والتواصل البصري."
+                },
+                advice: {
+                    en: "Establish device-free zones or specific hours to connect deeply. Engage in active listening, matching eye contact, and share interactive hobbies together.",
+                    ar: "خصص أوقاتاً خالية تماماً من الأجهزة الإلكترونية للتواصل. مارس الإنصات الفعال مع التواصل البصري، وشارك شريكك هواياته المفضلة."
+                }
+            },
+            "Touch": {
+                name: { en: "Physical Touch (Somatic Intimacy)", ar: "الاتصال الجسدي (الحميمية الجسدية والأمان)" },
+                strengths: {
+                    en: "Feels secure and anchored through physical proximity, holding hands, comforting hugs, reassuring touches, and close physical connection.",
+                    ar: "الشعور بالأمان والاستقرار عبر القرب الجسدي، تشابك الأيدي، العناق الدافئ، اللمسات المطمئنة، والاتصال الجسدي المستمر."
+                },
+                weaknesses: {
+                    en: "Deeply wounded by physical neglect, rejection of touch, emotional coldness manifested as physical distance, or abuse.",
+                    ar: "الشعور بالجرح الشديد عند الإهمال الجسدي، رفض التلامس، البرود العاطفي المتمثل في التباعد الجسدي، أو الجفاء."
+                },
+                advice: {
+                    en: "Make touch a natural part of greetings and farewells. Sit close during relaxing activities like watching movies, and offer comforting embraces during hard times.",
+                    ar: "اجعل التلامس جزءاً طبيعياً من التحية والوداع. اجلس قريباً من شريكك أثناء فترات الاسترخاء، وقدم له عناقاً طويلاً ومطمئناً عند الحاجة."
+                }
+            }
         };
 
         // 50 Questions (10 per category)
@@ -416,28 +491,104 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
             });
 
-            const statsGrid = document.getElementById('stats-grid');
-            let maxScore = -1;
-            let maxKey = '';
+            // Find dominant style
+            const keys = Object.keys(scores);
+            const sortedKeys = [...keys].sort((a, b) => scores[b] - scores[a]);
+            const dominantKey = sortedKeys[0];
+            const dominantPercent = Math.round((scores[dominantKey] / 50) * 100);
 
-            statsGrid.innerHTML = Object.keys(scores).map(k => {
-                const pct = Math.round((scores[k] / 50) * 100);
-                if (scores[k] > maxScore) { maxScore = scores[k]; maxKey = k; }
-                const name = categoriesTrans[k][currentLang];
-                return `
-                 <div class="flex items-center justify-between group">
-                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
-                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full bg-pink-500" style="width: ${pct}%"></div>
+            const profile = loveProfiles[dominantKey];
+            const dominantCard = document.getElementById('dominant-profile-card');
+
+            let severityLabel = "";
+            let severityClass = "";
+            if (dominantPercent > 75) {
+                severityLabel = currentLang === 'en' ? "Primary Love Style" : "لغة حب أساسية وطاغية";
+                severityClass = "bg-pink-500/20 text-pink-400 border-pink-500/30";
+            } else if (dominantPercent >= 45) {
+                severityLabel = currentLang === 'en' ? "Secondary Love Style" : "لغة حب ثانوية معتدلة";
+                severityClass = "bg-indigo-500/20 text-indigo-400 border-indigo-500/30";
+            } else {
+                severityLabel = currentLang === 'en' ? "Latent / Mild affinity" : "تفضيل كامن أو خفيف";
+                severityClass = "bg-slate-500/20 text-slate-400 border-slate-500/30";
+            }
+
+            dominantCard.innerHTML = `
+                <div class="glass-panel p-6 rounded-2xl border border-pink-500/20 bg-slate-900/60 mt-6 fade-in text-start">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-pink-400 font-bold block mb-1">
+                                ${currentLang === 'en' ? "Core Relationship Pillar" : "العماد الأساسي للتواصل العاطفي"}
+                            </span>
+                            <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                ${profile.name[currentLang]} 
+                                <span class="text-sm font-extrabold text-pink-300">(${dominantPercent}%)</span>
+                            </h3>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-full text-xs font-bold border ${severityClass}">
+                            ${severityLabel}
+                        </span>
                     </div>
-                    <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-500/20">
+                            <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-gem"></i>
+                                ${currentLang === 'en' ? "Affection Strengths & Expression" : "مظاهر القوة والتعبير العاطفي"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.strengths[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-red-950/10 border border-red-500/20">
+                            <h4 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-shield-alt"></i>
+                                ${currentLang === 'en' ? "Relational Pitfalls & Triggers" : "المناطق الحساسة والمخاطر في العلاقات"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.weaknesses[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-pink-950/20 border border-pink-500/20">
+                            <h4 class="text-sm font-bold text-pink-300 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-lightbulb"></i>
+                                ${currentLang === 'en' ? "Actionable Relationship Advice" : "نصائح وإرشادات للتواصل البناء"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.advice[currentLang]}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = keys.map(k => {
+                const pct = Math.round((scores[k] / 50) * 100);
+                const name = categoriesTrans[k][currentLang];
+                let badgeClass = "";
+                let statusText = "";
+                if (pct > 75) {
+                    badgeClass = "border-pink-500/30 text-pink-400 bg-pink-500/10";
+                    statusText = currentLang === 'en' ? "Primary" : "أساسي";
+                } else if (pct >= 45) {
+                    badgeClass = "border-indigo-500/30 text-indigo-400 bg-indigo-500/10";
+                    statusText = currentLang === 'en' ? "Secondary" : "ثانوي";
+                } else {
+                    badgeClass = "border-slate-500/30 text-slate-400 bg-slate-500/10";
+                    statusText = currentLang === 'en' ? "Latent" : "كامن";
+                }
+                return `
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg border border-slate-700/30 hover:bg-slate-800/30 transition-all duration-300 group text-start">
+                    <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-1/2">
+                        <span class="text-sm font-semibold text-slate-300 group-hover:text-white truncate">${name}</span>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${badgeClass}">${statusText}</span>
+                    </div>
+                    <div class="flex-1 flex items-center gap-3 w-full">
+                        <div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-pink-500 transition-all duration-1000" style="width: ${pct}%"></div>
+                        </div>
+                        <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                    </div>
                 </div>
                 `;
             }).join('');
-
-            document.getElementById('dominant-msg').innerText =
-                (currentLang === 'en' ? "Your primary love language is " : "لغة الحب الأساسية لديك هي ") +
-                categoriesTrans[maxKey][currentLang];
         }
 
         function shareResult(platform) {
@@ -457,7 +608,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         init();
     </script>
-</body>
+<script src="js/ai-assistant.js"></script></body>
 
 
 </html>

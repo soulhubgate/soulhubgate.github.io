@@ -178,39 +178,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
             </div>
 
-            <div id="page-result" class="hidden fade-in w-full text-center">
-                <div class="max-w-3xl mx-auto bg-slate-800/50 p-10 rounded-3xl border border-slate-700 shadow-2xl">
-                    <h2 class="text-xl md:text-2xl text-slate-300 mb-4">Your Personality Type is:</h2>
-                    <h1 id="result-type"
-                        class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-6 tracking-tighter">
-                        ----
-                    </h1>
+            <div id="page-result" class="hidden fade-in">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                    <div class="space-y-6">
+                        <div class="bg-slate-800/50 p-8 rounded-3xl border border-slate-700 shadow-2xl text-center">
+                            <h2 class="text-xl md:text-2xl text-slate-300 mb-2">Your Personality Type is:</h2>
+                            <h1 id="result-type"
+                                class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-6 tracking-tighter">
+                                ----
+                            </h1>
 
-                    <!-- Added: Letter Meanings Container -->
-                    <div id="result-letters" class="flex flex-wrap justify-center gap-3 mb-8">
-                        <!-- Injected by JS -->
+                            <div id="result-letters" class="flex flex-wrap justify-center gap-2 mb-6">
+                                <!-- Injected by JS -->
+                            </div>
+
+                            <div id="result-breakdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                <!-- Bars injected here -->
+                            </div>
+
+                            <div class="flex justify-center items-center gap-4 p-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                                <span class="text-sm text-slate-400 font-semibold">Share:</span>
+                                <button onclick="shareResult('wa')" class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center hover:scale-110 transition-transform"><i class="fab fa-whatsapp"></i></button>
+                                <button onclick="shareResult('tw')" class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center hover:scale-110 transition-transform"><i class="fab fa-twitter"></i></button>
+                            </div>
+                        </div>
+
+                        <div id="dominant-profile-card"></div>
                     </div>
 
-                    <div id="result-breakdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                        <!-- Bars injected here -->
-                    </div>
-                    <p class="text-lg text-slate-300 mb-8" id="result-description">
-                        Analysis pending...
-                    </p>
-
-                    <div class="flex flex-col md:flex-row gap-4 justify-center">
-                        <a href="blog.html"
-                            class="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/20 transition-all">
-                            Read Full Profile
-                        </a>
-                        <button onclick="shareResult('wa')"
-                            class="px-8 py-4 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl transition-all">
-                            <i class="fab fa-whatsapp"></i> Share
-                        </button>
-                        <button onclick="location.reload()"
-                            class="px-6 py-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-xl transition-all">
-                            Retake
-                        </button>
+                    <div class="space-y-6">
+                        <h2 class="text-2xl font-bold mb-2">Detailed Statistics</h2>
+                        <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
+                            <div id="stats-grid" class="grid grid-cols-1 gap-y-4"></div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <a href="blog.html"
+                                class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-center shadow-lg shadow-indigo-500/20 transition-all">Read Full Analysis in Library</a>
+                            <button onclick="location.reload()"
+                                class="w-full py-4 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold rounded-xl transition-all">Retake Test</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -250,19 +256,55 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             'P': { en: "Prefers flexibility and spontaneity.", ar: "يفضل المرونة والعفوية." }
         };
 
-        // 60 Questions (15 per dimension pair)
-        // Scoring: 
-        // EI: High = Extraversion (E), Low = Introversion (I)
-        // SN: High = Intuition (N), Low = Sensing (S) -- Convention: N usually higher? Let's say 1=S, 5=N
-        // TF: High = Thinking (T), Low = Feeling (F) -- Or 1=F, 5=T? Let's define explicitly.
-        // JP: High = Judging (J), Low = Perceiving (P) -- Let's say 1=P, 5=J
+        const mbtiArchetypes = {
+            "INFJ": { en: "Advocate", ar: "المستشار" },
+            "INTJ": { en: "Architect", ar: "المهندس" },
+            "INFP": { en: "Mediator", ar: "المعالج" },
+            "INTP": { en: "Logician", ar: "المنظر" },
+            "ENFJ": { en: "Protagonist", ar: "البطل" },
+            "ENTJ": { en: "Commander", ar: "القائد" },
+            "ENFP": { en: "Campaigner", ar: "المناضل" },
+            "ENTP": { en: "Debater", ar: "المحاور" },
+            "ISFJ": { en: "Defender", ar: "المدافع" },
+            "ISTJ": { en: "Logistician", ar: "الفاحص" },
+            "ISFP": { en: "Adventurer", ar: "الفنان" },
+            "ISTP": { en: "Virtuoso", ar: "الحرفي" },
+            "ESFJ": { en: "Consul", ar: "القنصل" },
+            "ESTJ": { en: "Executive", ar: "التنفيذي" },
+            "ESFP": { en: "Entertainer", ar: "المسلي" },
+            "ESTP": { en: "Entrepreneur", ar: "رائد الأعمال" }
+        };
 
-        // Revised Logic: 
-        // We track 4 scores.
-        // E_score (High=E)
-        // N_score (High=N)
-        // T_score (High=T)
-        // J_score (High=J)
+        const mbtiGroups = {
+            "NT": {
+                name: { en: "Analyst Group (Rationalists)", ar: "مجموعة العقلانيين (Analysts)" },
+                superpower: { en: "Strategic rigor & logical analysis", ar: "الدقة الاستراتيجية والتحليل المنطقي البارع" },
+                strengths: { en: "Scientific focus, high cognitive competence, mastery of problem solving, and highly visionary mindset.", ar: "التركيز العلمي، الكفاءة المعرفية العالية، البراعة في حل المشكلات المعقدة، والروح الرؤيوية المستقبلية." },
+                weaknesses: { en: "Can be perceived as emotionally detached, excessively critical, and impatient with perceived inefficiency.", ar: "قد يبدو منفصلاً عاطفياً، كثير النقد والتدقيق، وغير صبور مع عدم الكفاءة أو السلوك غير المنطقي." },
+                advice: { en: "Validate others' feelings consciously, appreciate emotional intelligence, and welcome organic human boundaries.", ar: "تدرب على التحقق من مشاعر الآخرين بوعي، وقدر قيمة الذكاء العاطفي، وتقبل الحدود الإنسانية الطبيعية." }
+            },
+            "NF": {
+                name: { en: "Diplomat Group (Idealists)", ar: "مجموعة المثاليين (Diplomats)" },
+                superpower: { en: "Enormous empathy & human insight", ar: "التعاطف الوجداني الهائل والفراسة الإنسانية" },
+                strengths: { en: "Incredible emotional intelligence, deep concern for others, creative conceptualization, and inspiring authenticity.", ar: "ذكاء عاطفي غير عادي، اهتمام عميق بالآخرين، قدرة تعبيرية إبداعية، والتمسك الكامل بالأصالة والصدق الذاتي." },
+                weaknesses: { en: "Highly sensitive to conflict, prone to emotional burnout, and struggles to make tough, impersonal decisions.", ar: "حساسية مفرطة تجاه النزاعات، عرضة للاحتراق العاطفي، وصعوبة بالغة في اتخاذ القرارات القاسية والمجردة." },
+                advice: { en: "Establish firm personal boundaries, avoid taking opinions personally, and manage emotional energy proactively.", ar: "ضع حدوداً شخصية واضحة وحازمة، وتجنب أخذ آراء الآخرين بشكل شخصي، وأدر طاقتك النفسية بنشاط." }
+            },
+            "SJ": {
+                name: { en: "Sentinel Group (Guardians)", ar: "مجموعة الحراس (Sentinels)" },
+                superpower: { en: "Unwavering reliability & order", ar: "الموثوقية التامة وحفظ النظام والاستقرار" },
+                strengths: { en: "Stellar organizational abilities, deep sense of duty and loyalty, practical focus, and respect for stable institutions.", ar: "قدرات تنظيمية ممتازة، حس عالٍ بالواجب والولاء، تركيز عملي دقيق، واحترام المؤسسات والنظام القائم." },
+                weaknesses: { en: "Prone to rigidity, resistant to change or unconventional ideas, and highly structured to a fault.", ar: "الميل إلى الصلابة الفكرية، مقاومة التغيير أو الأفكار غير المألوفة، والتمسك المفرط بالهيكلية والقواعد." },
+                advice: { en: "Incorporate minor spontaneous exercises into your routines, welcome creative disruptions, and tolerate diverse systems.", ar: "أدخل بعض الأنشطة العفوية البسيطة في روتينك، ورحب بالتجديد الإبداعي، وتقبل النماذج الحياتية المختلفة." }
+            },
+            "SP": {
+                name: { en: "Explorer Group (Pragmatists)", ar: "مجموعة المستكشفين (Explorers)" },
+                superpower: { en: "Tactical adaptability & pragmatism", ar: "المرونة التكتيكية والواقعية العملية البارعة" },
+                strengths: { en: "Outstanding hands-on flexibility, acute aesthetic sense, rapid physical response, and optimistic outlook.", ar: "مرونة عملية ممتازة، حس جمالي وفني متطور، سرعة بديهة واستجابة تكتيكية، ونظرة متفائلة ومنطلقة تجاه الحياة." },
+                weaknesses: { en: "Easily bored by theoretical planning, short-term focus, and avoids long-term commitments or dry structured rules.", ar: "سرعة الملل من الأفكار النظرية الجافة، التركيز على المدى القصير فقط، وتجنب الالتزامات والقواعد الهيكلية الصارمة." },
+                advice: { en: "Cultivate deliberate persistence on structured goals, practice long-term envisioning, and build regular self-discipline.", ar: "احرص على بناء المثابرة والصبر لتحقيق أهداف بعيدة المدى، وتدرب على التخطيط الاستراتيجي، ونمِّ الانضباط الذاتي." }
+            }
+        };
 
         const questions = [
             // E vs I (High score = Extravert)
@@ -303,7 +345,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             { category: "TF", text: { en: "I value logic over feelings.", ar: "أقدر المنطق أكثر من المشاعر." } },
             { category: "TF", text: { en: "I am often described as 'tough-minded'.", ar: "غالباً ما أوصف بأنني 'صارم العقلية'." } },
             { category: "TF", text: { en: "I criticize constructively.", ar: "أنتقد بشكل بناء." } },
-            { category: "TF", text: { en: "I make decisions based on objective criteria.", ar: "أتخذ القرارات بناءً على معايير موضوعية." } },
+            { category: "TF", text: { en: "I make decisions based on objective criteria.", ar: "أتخيد القرارات بناءً على معايير موضوعية." } },
             { category: "TF", text: { en: "I can stay detached in emotional situations.", ar: "أستطيع البقاء منفصلاً في المواقف العاطفية." } },
             { category: "TF", text: { en: "I debate to find the truth.", ar: "أناقش للوصول إلى الحقيقة." } },
             { category: "TF", text: { en: "I prioritize efficiency over harmony.", ar: "أعطي الأولوية للكفاءة على الانسجام." } },
@@ -417,57 +459,119 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
         }
 
+        function calcPreference(score, rightChar, leftChar) {
+            const isRight = score > 45;
+            const pct = isRight 
+                ? Math.round(((score - 45) / 30) * 50) + 50 
+                : Math.round(((45 - score) / 30) * 50) + 50;
+            return {
+                char: isRight ? rightChar : leftChar,
+                pct: pct
+            };
+        }
+
         function showResult() {
             document.getElementById('page-quiz').classList.add('hidden');
             document.getElementById('page-result').classList.remove('hidden');
 
-            // Calculate Type
-            // Max score per dim is 15 items * 5 = 75. 
-            // Midpoint is 15 * 3 = 45.
-            // > 45 = Right side (E, N, T, J)
-            // <= 45 = Left side (I, S, F, P)
+            const prefEI = calcPreference(scores.EI, 'E', 'I');
+            const prefSN = calcPreference(scores.SN, 'N', 'S');
+            const prefTF = calcPreference(scores.TF, 'T', 'F');
+            const prefJP = calcPreference(scores.JP, 'J', 'P');
 
-            const type = [
-                scores.EI > 45 ? 'E' : 'I',
-                scores.SN > 45 ? 'N' : 'S',
-                scores.TF > 45 ? 'T' : 'F',
-                scores.JP > 45 ? 'J' : 'P'
-            ].join('');
+            const type = [prefEI.char, prefSN.char, prefTF.char, prefJP.char].join('');
 
             document.getElementById('result-type').innerText = type;
 
-            // NEW: Render detailed letter breakdown
             const lettersDiv = document.getElementById('result-letters');
             lettersDiv.innerHTML = type.split('').map(char => {
                 const meaning = letterMeanings[char][currentLang];
                 const desc = letterDescs[char][currentLang];
                 return `
-                    <div class="bg-indigo-900/30 border border-indigo-500/30 px-4 py-3 rounded-xl flex flex-col items-center min-w-[120px]">
+                    <div class="bg-emerald-950/20 border border-emerald-500/20 px-4 py-3 rounded-xl flex flex-col items-center min-w-[120px] fade-in">
                         <span class="text-2xl font-bold text-emerald-400 mb-1">${char}</span>
                         <span class="text-white font-bold text-sm mb-1">${meaning}</span>
-                        <span class="text-xs text-slate-400 max-w-[150px]">${desc}</span>
+                        <span class="text-[10px] text-slate-400 text-center max-w-[130px] leading-snug">${desc}</span>
                     </div>
                 `;
             }).join('');
 
             const breakdown = document.getElementById('result-breakdown');
             breakdown.innerHTML = `
-                ${makeBar(letterMeanings[scores.EI > 45 ? 'E' : 'I'][currentLang], scores.EI)}
-                ${makeBar(letterMeanings[scores.SN > 45 ? 'N' : 'S'][currentLang], scores.SN)}
-                ${makeBar(letterMeanings[scores.TF > 45 ? 'T' : 'F'][currentLang], scores.TF)}
-                ${makeBar(letterMeanings[scores.JP > 45 ? 'J' : 'P'][currentLang], scores.JP)}
+                ${makeVerticalBar(letterMeanings[prefEI.char][currentLang], prefEI.pct)}
+                ${makeVerticalBar(letterMeanings[prefSN.char][currentLang], prefSN.pct)}
+                ${makeVerticalBar(letterMeanings[prefTF.char][currentLang], prefTF.pct)}
+                ${makeVerticalBar(letterMeanings[prefJP.char][currentLang], prefJP.pct)}
             `;
 
-            const descKey = `mbti_${type}_desc`;
-            // Simplified dynamic description fallback
-            const desc = translations[currentLang][descKey] || (currentLang === 'ar' ? "تحليل شخصيتك جاهز اقرأ المزيد في المكتبة." : "Your full personality profile is ready. Read more in our library.");
-            document.getElementById('result-description').innerText = desc;
+            // Upgraded Premium Dominant Profile Card
+            const dominantCard = document.getElementById('dominant-profile-card');
+            const archetype = mbtiArchetypes[type][currentLang];
+            const groupKey = [prefSN.char, prefTF.char].join(''); // NT or NF
+            const groupKeyAlt = [prefSN.char, prefJP.char].join(''); // SJ or SP
+            const finalGroupKey = mbtiGroups[groupKey] ? groupKey : groupKeyAlt;
+            const group = mbtiGroups[finalGroupKey];
+
+            dominantCard.innerHTML = `
+                <div class="glass-panel p-6 rounded-2xl border border-emerald-500/20 bg-slate-900/60 mt-4 fade-in text-start">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-emerald-400 font-bold block mb-1">${group.name[currentLang]}</span>
+                            <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                ${archetype} <span class="text-emerald-300">(${type})</span>
+                            </h3>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-full text-xs font-bold border border-emerald-500/30 text-emerald-400 bg-emerald-500/10">
+                            ${currentLang === 'en' ? "Optimal Preference" : "تفضيل متناسق"}
+                        </span>
+                    </div>
+
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6 border-l-2 border-emerald-500 pl-3 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-3">
+                        <strong>${currentLang === 'en' ? "Jungian Personality Archetype" : "التوصيف اليونغي للنمط"}:</strong> 
+                        ${currentLang === 'en' ? `As an ${type}, you belong to the ${group.name.en}. Your core superpower is ${group.superpower.en}.` : `بصفتك صاحب نمط ${type}، فأنت تنتمي إلى ${group.name.ar}. الميزة الأساسية لنمطك هي ${group.superpower.ar}.`}
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-500/20">
+                            <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-check-circle"></i>
+                                ${currentLang === 'en' ? "Dominant Strengths & Superpowers" : "نقاط القوة والميزات الكبرى"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${group.strengths[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-red-950/10 border border-red-500/20">
+                            <h4 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                ${currentLang === 'en' ? "Behavioral Blindspots & Growth Areas" : "المناطق العمياء وتحديات النمو"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${group.weaknesses[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-indigo-950/20 border border-indigo-500/20">
+                            <h4 class="text-sm font-bold text-indigo-300 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-route"></i>
+                                ${currentLang === 'en' ? "Actionable Growth Path & Recommendations" : "خطوات التطوير والتمكين العملي"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${group.advice[currentLang]}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Populate Stats Grid
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = `
+                ${makeStatRow(categoriesTrans.EI[currentLang], prefEI.pct, prefEI.char === 'E' ? (currentLang === 'en' ? 'Extravert (E)' : 'منبسط (E)') : (currentLang === 'en' ? 'Introvert (I)' : 'انطوائي (I)'), prefEI.pct > 75 ? 'High' : prefEI.pct >= 60 ? 'Moderate' : 'Balanced')}
+                ${makeStatRow(categoriesTrans.SN[currentLang], prefSN.pct, prefSN.char === 'N' ? (currentLang === 'en' ? 'Intuitive (N)' : 'حدسي (N)') : (currentLang === 'en' ? 'Sensing (S)' : 'واقعي (S)'), prefSN.pct > 75 ? 'High' : prefSN.pct >= 60 ? 'Moderate' : 'Balanced')}
+                ${makeStatRow(categoriesTrans.TF[currentLang], prefTF.pct, prefTF.char === 'T' ? (currentLang === 'en' ? 'Thinking (T)' : 'منطقي (T)') : (currentLang === 'en' ? 'Feeling (F)' : 'عاطفي (F)'), prefTF.pct > 75 ? 'High' : prefTF.pct >= 60 ? 'Moderate' : 'Balanced')}
+                ${makeStatRow(categoriesTrans.JP[currentLang], prefJP.pct, prefJP.char === 'J' ? (currentLang === 'en' ? 'Judging (J)' : 'حازم (J)') : (currentLang === 'en' ? 'Perceiving (P)' : 'مرن (P)'), prefJP.pct > 75 ? 'High' : prefJP.pct >= 60 ? 'Moderate' : 'Balanced')}
+            `;
         }
 
-        function makeBar(label, score) {
-            const pct = Math.round((score / 75) * 100);
+        function makeVerticalBar(label, pct) {
             return `
-             <div class="bg-slate-700/50 p-4 rounded-xl flex flex-col items-center">
+             <div class="bg-slate-700/30 p-4 rounded-xl flex flex-col items-center">
                 <span class="text-xs text-slate-400 font-bold mb-2">${label}</span>
                 <div class="w-full h-32 bg-slate-800 rounded-full relative overflow-hidden flex items-end justify-center">
                     <div class="w-full bg-gradient-to-t from-emerald-600 to-teal-400 transition-all duration-1000" style="height: ${pct}%"></div>
@@ -477,12 +581,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             `;
         }
 
+        function makeStatRow(name, percent, preference, status) {
+            let statusLabel = "";
+            let badgeClass = "";
+            if (status === 'High') {
+                statusLabel = currentLang === 'en' ? "Strong" : "قوي";
+                badgeClass = "border-emerald-500/30 text-emerald-400 bg-emerald-500/10";
+            } else if (status === 'Moderate') {
+                statusLabel = currentLang === 'en' ? "Moderate" : "معتدل";
+                badgeClass = "border-teal-500/30 text-teal-400 bg-teal-500/10";
+            } else {
+                statusLabel = currentLang === 'en' ? "Balanced" : "متوازن";
+                badgeClass = "border-slate-500/30 text-slate-400 bg-slate-500/10";
+            }
+
+            return `
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg border border-slate-700/30 hover:bg-slate-800/30 transition-all duration-300 group">
+                <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-1/3">
+                    <span class="text-sm font-semibold text-slate-300 group-hover:text-white truncate">${name}</span>
+                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${badgeClass}">${statusLabel}</span>
+                </div>
+                <div class="flex-1 flex items-center gap-3 w-full">
+                    <div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full bg-emerald-500 transition-all duration-1000" style="width: ${percent}%"></div>
+                    </div>
+                    <span class="text-xs font-semibold text-slate-400 group-hover:text-slate-200 w-24 text-end truncate">${preference}</span>
+                    <span class="text-sm font-bold text-white w-10 text-end">${percent}%</span>
+                </div>
+            </div>`;
+        }
+
         function shareResult(platform) {
             const type = document.getElementById('result-type').innerText;
             const url = encodeURIComponent(window.location.href);
             const text = currentLang === 'en' ? `I am an ${type}! Check your personality type on Soul-Hub:` : `أنا نمطي هو ${type}! اكتشف نمط شخصيتك على Soul-Hub:`;
             let shareUrl = '';
             if (platform === 'wa') shareUrl = `https://api.whatsapp.com/send?text=${text} ${url}`;
+            if (platform === 'tw') shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
             window.open(shareUrl, '_blank');
         }
 
@@ -495,7 +630,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         init();
     </script>
-</body>
+<script src="js/ai-assistant.js"></script></body>
+</html>
+<script src="js/ai-assistant.js"></script></body>
 
 
 </html>

@@ -193,6 +193,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 class="flex-1 py-3 bg-sky-500 hover:bg-sky-400 rounded-xl text-white font-bold transition-all"><i
                                     class="fab fa-twitter"></i> Twitter</button>
                         </div>
+                        <div id="dominant-profile-card"></div>
                     </div>
                     <div class="space-y-6">
                         <div class="bg-slate-800/30 p-6 rounded-xl border border-slate-700/50">
@@ -223,6 +224,54 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             "MAC": { en: "Machiavellianism", ar: "الميكافيلية" },
             "NAR": { en: "Narcissism", ar: "النرجسية" },
             "PSY": { en: "Psychopathy", ar: "الاعتلال النفسي" }
+        };
+
+        const darktriadProfiles = {
+            "MAC": {
+                name: { en: "Machiavellianism (Strategic Focus & Influence)", ar: "الميكافيلية (التركيز الاستراتيجي والتأثير)" },
+                strengths: {
+                    en: "Strategic planning, highly developed organizational intelligence, calculating long-term consequences, objective detachment, and emotional self-control.",
+                    ar: "التخطيط الاستراتيجي، الفطنة والذكاء التنظيمي، حساب النتائج بعيدة المدى، الموضوعية والحياد التام، والقدرة العالية على ضبط المشاعر."
+                },
+                weaknesses: {
+                    en: "Tendency to cynicism, risk of treating human relationships as mere utility, potential manipulative behavior, and erosion of long-term trust.",
+                    ar: "الميل للنظرة التشاؤمية أو الساخرة، خطر التعامل مع العلاقات الإنسانية كأدوات نفعية، التلاعب العاطفي، وتآكل الثقة طويلة الأمد."
+                },
+                advice: {
+                    en: "Incorporate radical transparency in communication. Cultivate reciprocal altruism where mutual success is prioritized over pure self-interest.",
+                    ar: "احرص على الشفافية المطلقة في تواصلك. نمّ مبدأ 'المنفعة المتبادلة والخير المشترك' بدلاً من التركيز على المصلحة الذاتية البحتة."
+                }
+            },
+            "NAR": {
+                name: { en: "Narcissism (Charismatic Visionary)", ar: "النرجسية (الرائد الجذاب)" },
+                strengths: {
+                    en: "High self-confidence, powerful public speaking ability, natural leadership aspiration, visionary drive, resilience against rejection, and charisma.",
+                    ar: "الثقة العالية بالنفس، الحضور والقدرة على الحديث أمام الجمهور، الرغبة الفطرية في القيادة، التوجه الريادي والهمة العالية، ومقاومة الإحباط."
+                },
+                weaknesses: {
+                    en: "Hypersensitivity to criticism (narcissistic injury), difficulty acknowledging errors, fragile self-esteem dependent on praise, and empathy blind spots.",
+                    ar: "الحساسية المفرطة للنقد أو التجاهل، صعوبة الاعتراف بالأخطاء، تقدير ذات هش يعتمد كلياً على المديح الخارجي، ومناطق عمياء في تفهم مشاعر الآخرين."
+                },
+                advice: {
+                    en: "Practice active listening and celebrate the achievements of others without seeking personal credit. Cultivate internal self-worth unrelated to external praise.",
+                    ar: "تدرب على الاستماع الفعال والاحتفاء بإنجازات الآخرين بصدق دون محاولة خطف الأضواء. ابنِ تقديراً ذاتياً داخلياً لا يتأثر بالتقييم الخارجي."
+                }
+            },
+            "PSY": {
+                name: { en: "Psychopathy (Fearless Maverick)", ar: "الاعتلال النفسي (المتمرد الجريء)" },
+                strengths: {
+                    en: "Exceptional resilience under extreme stress, physical and social courage, rapid decision-making in crises, low performance anxiety, and non-conformist thinking.",
+                    ar: "قدرة استثنائية على الصمود تحت وطأة الضغوط الكارثية، الشجاعة الجسدية والاجتماعية، اتخاذ القرارات الخاطفة في الأزمات، وخلو من قلق الأداء."
+                },
+                weaknesses: {
+                    en: "High impulsivity, tendency to ignore safety rules and social norms, difficulty experiencing deep guilt or remorse, and lower capacity for warm emotional bonding.",
+                    ar: "الاندفاع العالي، الميل لتجاهل معايير السلامة والقوانين، صعوبة الشعور بالذنب أو الندم بعد الأخطاء، وضعف القدرة على الارتباط العاطفي الدافئ."
+                },
+                advice: {
+                    en: "Implement a 'pause and reflect' rule before making major life choices. Cultivate emotional literacy by actively looking for the impact of your actions on others.",
+                    ar: "طبق قاعدة 'التوقف والتفكير' لـ 10 ثوانٍ قبل اتخاذ أي قرار مصيري. احرص على فهم أثر أفعالك على مشاعر المحيطين بك وتعميق التعاطف."
+                }
+            }
         };
 
         // 50 Qs. Approx 16-17 per dimension.
@@ -382,10 +431,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             // Normalize approx based on item count. (16 items * 5 = 80 max). 
             // We just use raw mapping to 100 for visual consistency.
-            // Let's assume max possible score per trait is roughly ~85. 
-            // Simplified normalization: score / (numItems * 5) * 100.
             // MAC: 16 items. NAR: 17 items. PSY: 17 items.
-
             const data = [
                 (scores.MAC / (16 * 5)) * 100,
                 (scores.NAR / (17 * 5)) * 100,
@@ -421,16 +467,106 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }
             });
 
-            const statsGrid = document.getElementById('stats-grid');
-            statsGrid.innerHTML = labels.map((name, i) => {
-                const pct = Math.round(data[i]);
-                return `
-                 <div class="flex items-center justify-between group">
-                    <span class="text-sm font-semibold text-slate-300 w-32 truncate">${name}</span>
-                    <div class="flex-1 mx-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full bg-gray-500" style="width: ${pct}%"></div>
+            // Calculate dominant trait
+            const keys = ["MAC", "NAR", "PSY"];
+            const normalizedScores = {
+                MAC: (scores.MAC / (16 * 5)) * 100,
+                NAR: (scores.NAR / (17 * 5)) * 100,
+                PSY: (scores.PSY / (17 * 5)) * 100
+            };
+            const sortedKeys = [...keys].sort((a, b) => normalizedScores[b] - normalizedScores[a]);
+            const dominantKey = sortedKeys[0];
+            const dominantPercent = Math.round(normalizedScores[dominantKey]);
+
+            const profile = darktriadProfiles[dominantKey];
+            const dominantCard = document.getElementById('dominant-profile-card');
+
+            let severityLabel = "";
+            let severityClass = "";
+            if (dominantPercent > 70) {
+                severityLabel = currentLang === 'en' ? "High Alert / Pronounced" : "حذر مرتفع / تأثير جلي";
+                severityClass = "bg-rose-500/20 text-rose-400 border-rose-500/30";
+            } else if (dominantPercent >= 40) {
+                severityLabel = currentLang === 'en' ? "Moderate Profile" : "سمات معتدلة ومتزنة";
+                severityClass = "bg-amber-500/20 text-amber-400 border-amber-500/30";
+            } else {
+                severityLabel = currentLang === 'en' ? "Low / Stable" : "مستوى منخفض ومستقر";
+                severityClass = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+            }
+
+            dominantCard.innerHTML = `
+                <div class="glass-panel p-6 rounded-2xl border border-gray-500/20 bg-slate-900/60 mt-6 fade-in text-start">
+                    <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-gray-400 font-bold block mb-1">
+                                ${currentLang === 'en' ? "Subclinical Personality Analysis" : "تحليل الشخصية دون السريري"}
+                            </span>
+                            <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                                ${profile.name[currentLang]} 
+                                <span class="text-sm font-extrabold text-gray-300">(${dominantPercent}%)</span>
+                            </h3>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-full text-xs font-bold border ${severityClass}">
+                            ${severityLabel}
+                        </span>
                     </div>
-                    <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-emerald-950/10 border border-emerald-500/20">
+                            <h4 class="text-sm font-bold text-emerald-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-gem"></i>
+                                ${currentLang === 'en' ? "Adaptive Strengths & Focus" : "الميزات الكبرى ونقاط التميز"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.strengths[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-rose-950/10 border border-rose-500/20">
+                            <h4 class="text-sm font-bold text-rose-400 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-shield-alt"></i>
+                                ${currentLang === 'en' ? "Clinical Warning Signs & Risks" : "المخاطر السلوكية والمناطق العمياء"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.weaknesses[currentLang]}</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-blue-950/20 border border-blue-500/20">
+                            <h4 class="text-sm font-bold text-blue-300 flex items-center gap-2 mb-1.5">
+                                <i class="fas fa-lightbulb"></i>
+                                ${currentLang === 'en' ? "Reframing Advice & Growth Plan" : "توصيات التطوير والارتقاء الذاتي"}
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">${profile.advice[currentLang]}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = keys.map(k => {
+                const pct = Math.round(normalizedScores[k]);
+                const name = categoriesTrans[k][currentLang];
+                let badgeClass = "";
+                let statusText = "";
+                if (pct > 70) {
+                    badgeClass = "border-rose-500/30 text-rose-400 bg-rose-500/10";
+                    statusText = currentLang === 'en' ? "High Alert" : "حذر مرتفع";
+                } else if (pct >= 40) {
+                    badgeClass = "border-amber-500/30 text-amber-400 bg-amber-500/10";
+                    statusText = currentLang === 'en' ? "Moderate" : "متوسط";
+                } else {
+                    badgeClass = "border-emerald-500/30 text-emerald-400 bg-emerald-500/10";
+                    statusText = currentLang === 'en' ? "Stable" : "مستقر";
+                }
+                return `
+                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg border border-slate-700/30 hover:bg-slate-800/30 transition-all duration-300 group text-start">
+                    <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-1/2">
+                        <span class="text-sm font-semibold text-slate-300 group-hover:text-white truncate">${name}</span>
+                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded border ${badgeClass}">${statusText}</span>
+                    </div>
+                    <div class="flex-1 flex items-center gap-3 w-full">
+                        <div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-gray-500 transition-all duration-1000" style="width: ${pct}%"></div>
+                        </div>
+                        <span class="text-sm font-bold text-white w-10 text-end">${pct}%</span>
+                    </div>
                 </div>
                 `;
             }).join('');
@@ -454,7 +590,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         init();
     </script>
-</body>
+<script src="js/ai-assistant.js"></script></body>
 
 
 </html>

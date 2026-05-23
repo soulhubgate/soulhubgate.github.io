@@ -2,7 +2,7 @@ const translations = {
     en: {
         nav_home: "Home",
         nav_tests: "All Tests",
-        nav_library: "Library",
+        nav_library: "Liberary",
         nav_about: "About Me",
         nav_contact: "Contact",
         nav_support: "Support",
@@ -22,8 +22,8 @@ const translations = {
         feat_tests_desc: "Explore 7+ professional assessments including MBTI, Big Five, and Clinical Personality Styles.",
         feat_tests_btn: "Browse Tests",
 
-        feat_lib_title: "Knowledge Library",
-        feat_lib_desc: "Read comprehensive guides on personality disorders, love languages, and emotional intelligence.",
+        feat_lib_title: "Liberary",
+        feat_lib_desc: "Explore our deep-dive psychology encyclopedia with comprehensive 700-word articles. (Note: Sourced from Grokipedia).",
         feat_lib_btn: "Read Articles",
 
         feat_msg_title: "Creator's Message",
@@ -72,12 +72,21 @@ const translations = {
         priv_1_d: "PersonaFlow is a client-side application. We do not store your answers.",
 
         option_4: "Agree",
-        option_5: "Strongly Agree"
+        option_5: "Strongly Agree",
+
+        // Liberary Filters
+        filter_all: "All",
+        filter_mbti: "16 Personalities",
+        filter_love: "Love & Relationships",
+        filter_clinical: "Clinical Psychology",
+        filter_big5: "Big Five Traits",
+        filter_eq: "Emotional Intelligence",
+        filter_dark: "Dark Triad"
     },
     ar: {
         nav_home: "الرئيسية",
         nav_tests: "الاختبارات",
-        nav_library: "المكتبة",
+        nav_library: "Liberary",
         nav_about: "عني",
         nav_contact: "تواصل معي",
         nav_support: "دعم",
@@ -90,8 +99,8 @@ const translations = {
         feat_tests_desc: "اكتشف أكثر من 7 اختبارات مهنية بما في ذلك MBTI، السمات الخمس الكبرى، والأنماط السريرية.",
         feat_tests_btn: "تصفح الاختبارات",
 
-        feat_lib_title: "مكتبة المعرفة",
-        feat_lib_desc: "اقرأ أدلة شاملة حول اضطرابات الشخصية، لغات الحب، والذكاء العاطفي.",
+        feat_lib_title: "مكتبة Liberary",
+        feat_lib_desc: "اكتشف موسوعتنا النفسية العميقة مع مقالات تفصيلية غنية في حدود 700 كلمة. (ملاحظة: المصدر هو جروكيبيديا).",
         feat_lib_btn: "اقرأ المقالات",
 
         feat_msg_title: "رسالة المطور",
@@ -147,7 +156,15 @@ const translations = {
         priv_1_d: "هذا التطبيق يعمل بالكامل على متصفحك. نحن لا نقوم بتخزين إجاباتك.",
 
         option_4: "أوافق",
-        option_5: "أوافق بشدة"
+        option_5: "أوافق بشدة",
+
+        // Liberary Filters
+        filter_all: "الكل",
+        filter_mbti: "الأنماط الـ 16",
+        filter_love: "الحب والعلاقات",
+        filter_clinical: "التحليل السريري",
+        filter_big5: "السمات الخمس الكبرى",
+        filter_eq: "الذكاء العاطفي",
+        filter_dark: "الثالوث المظلم"
     }
 };
-
